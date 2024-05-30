@@ -1,4 +1,5 @@
 import * as core from '@actions/core'
+import * as github from '@actions/github'
 import { wait } from './wait'
 
 /**
@@ -7,18 +8,18 @@ import { wait } from './wait'
  */
 export async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
+    const workflowId: string = core.getInput('workflowId')
+    const chassyToken: string = core.getInput('chassyToken')
+    const parameters: Record<string, unknown> = JSON.parse(
+      core.getInput('parameters') || '{}'
+    )
 
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
-
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
+    console.log('workflowId', workflowId)
+    console.log('chassyToken', chassyToken)
+    console.log('parameters', parameters)
+    console.log('github.context', github.context)
     // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
+    core.setOutput('workflowExecution', 'workflowExecution will be here')
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)

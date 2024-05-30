@@ -1,23 +1,21 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Execute workflow'
+description: 'Executes particular workflow by id'
+author: 'Chassy'
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
-branding:
-  icon: 'heart'
-  color: 'red'
-
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  workflowId:
+    description: 'The id of the specified workflow'
     required: true
-    default: '1000'
-
-# Define your outputs here.
+  chassyToken:
+    description: 'Chassy token to interact with Chassy platform'
+    required: true
+  parameters:
+    description: 'Parameters with any fields in JSON format'
+    required: false
+  
 outputs:
-  time:
-    description: 'Your output description here'
+  workflowExecution:
+    description: 'Workflow execution result'
 
 runs:
   using: node20
