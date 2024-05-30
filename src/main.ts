@@ -1,17 +1,17 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
-/**
- * The main function for the action.
- * @returns {Promise<void>} Resolves when the action is complete.
- */
 export async function run(): Promise<void> {
   try {
     const workflowId: string = core.getInput('workflowId')
-    const chassyToken: string = core.getInput('chassyToken')
-    const parameters: Record<string, unknown> = JSON.parse(
-      core.getInput('parameters') || '{}'
-    )
+    const chassyToken = process.env.CHASSY_TOKEN
+    // const parameters: Record<string, unknown> = JSON.parse(
+    //   core.getInput('parameters') || '{}'
+    // )
+
+    if (!chassyToken) {
+      throw new Error('Chassy token isn`t present in env variables')
+    }
 
     const workflowRunURL = `https://api.test.chassy.dev/v1/workflow/${workflowId}/run`
     let response
@@ -24,7 +24,7 @@ export async function run(): Promise<void> {
         },
         body: JSON.stringify({
           githubData: {
-            envContext: {},
+            envContext: process.env,
             githubContext: github.context
           },
           dryRun: true
@@ -36,15 +36,9 @@ export async function run(): Promise<void> {
       response = await rawResponse.json()
     } catch (e) {
       console.debug(`Error during making POST request to ${workflowRunURL}`)
-      if (e instanceof Error) core.setFailed(e.message)
+      if (e instanceof Error) throw new Error(e.message)
     }
 
-    console.log('response', response)
-    console.log('process.env', process.env)
-    console.log('chassyToken', chassyToken)
-    console.log('parameters', parameters)
-    console.log('github.context', github)
-    // Set outputs for other workflow steps to use
     core.setOutput('workflowExecution', JSON.stringify(response))
   } catch (error) {
     // Fail the workflow run if an error occurs

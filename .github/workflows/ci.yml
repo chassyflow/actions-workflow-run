@@ -11,9 +11,6 @@ on:
 permissions:
   contents: read
 
-env:
-  GLOBAL_ENV_VAR: 'global_value'
-
 jobs:
   test-typescript:
     name: TypeScript Tests
@@ -50,6 +47,8 @@ jobs:
   test-action:
     name: GitHub Actions Test
     runs-on: ubuntu-latest
+    env:
+      CHASSY_TOKEN: ${{ secrets.CHASSY_ACCESS_TOKEN }}
 
     steps:
       - name: Checkout

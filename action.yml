@@ -6,9 +6,6 @@ inputs:
   workflowId:
     description: 'The id of the specified workflow'
     required: true
-  chassyToken:
-    description: 'Chassy token to interact with Chassy platform'
-    required: true
   parameters:
     description: 'Parameters with any fields in JSON format'
     required: false
