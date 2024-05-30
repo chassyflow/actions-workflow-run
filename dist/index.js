@@ -5991,71 +5991,6 @@ exports.Deprecation = Deprecation;
 
 /***/ }),
 
-/***/ 4227:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
-
-(function () {
-  (__nccwpck_require__(2437).config)(
-    Object.assign(
-      {},
-      __nccwpck_require__(5158),
-      __nccwpck_require__(5478)(process.argv)
-    )
-  )
-})()
-
-
-/***/ }),
-
-/***/ 5478:
-/***/ ((module) => {
-
-const re = /^dotenv_config_(encoding|path|debug|override|DOTENV_KEY)=(.+)$/
-
-module.exports = function optionMatcher (args) {
-  return args.reduce(function (acc, cur) {
-    const matches = cur.match(re)
-    if (matches) {
-      acc[matches[1]] = matches[2]
-    }
-    return acc
-  }, {})
-}
-
-
-/***/ }),
-
-/***/ 5158:
-/***/ ((module) => {
-
-// ../config.js accepts options via environment variables
-const options = {}
-
-if (process.env.DOTENV_CONFIG_ENCODING != null) {
-  options.encoding = process.env.DOTENV_CONFIG_ENCODING
-}
-
-if (process.env.DOTENV_CONFIG_PATH != null) {
-  options.path = process.env.DOTENV_CONFIG_PATH
-}
-
-if (process.env.DOTENV_CONFIG_DEBUG != null) {
-  options.debug = process.env.DOTENV_CONFIG_DEBUG
-}
-
-if (process.env.DOTENV_CONFIG_OVERRIDE != null) {
-  options.override = process.env.DOTENV_CONFIG_OVERRIDE
-}
-
-if (process.env.DOTENV_CONFIG_DOTENV_KEY != null) {
-  options.DOTENV_KEY = process.env.DOTENV_CONFIG_DOTENV_KEY
-}
-
-module.exports = options
-
-
-/***/ }),
-
 /***/ 2437:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -9796,7 +9731,7 @@ const {
 /** @type {import('http2')} */
 let http2
 try {
-  http2 = __nccwpck_require__(6281)
+  http2 = __nccwpck_require__(5158)
 } catch {
   // @ts-ignore
   http2 = { constants: {} }
@@ -29666,7 +29601,7 @@ async function run() {
         const workflowId = core.getInput('workflowId');
         const chassyToken = core.getInput('chassyToken');
         const parameters = JSON.parse(core.getInput('parameters') || '{}');
-        const workflowRunURL = `${process.env.API_BASE_URL}/workflow/${workflowId}/run`;
+        const workflowRunURL = `https://api.test.chassy.dev/v1/workflow/${workflowId}/run`;
         let response;
         try {
             const rawResponse = await fetch(workflowRunURL, {
@@ -29784,7 +29719,7 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 6281:
+/***/ 5158:
 /***/ ((module) => {
 
 "use strict";
@@ -31617,8 +31552,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 /**
  * The entrypoint for the action.
  */
-__nccwpck_require__(4227);
+const dotenv_1 = __nccwpck_require__(2437);
 const main_1 = __nccwpck_require__(399);
+(0, dotenv_1.config)();
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 (0, main_1.run)();
 

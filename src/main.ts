@@ -13,7 +13,7 @@ export async function run(): Promise<void> {
       core.getInput('parameters') || '{}'
     )
 
-    const workflowRunURL = `${process.env.API_BASE_URL}/workflow/${workflowId}/run`
+    const workflowRunURL = `https://api.test.chassy.dev/v1/workflow/${workflowId}/run`
     let response
     try {
       const rawResponse = await fetch(workflowRunURL, {
