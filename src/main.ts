@@ -25,7 +25,7 @@ export async function run(): Promise<void> {
         body: JSON.stringify({
           githubData: {
             envContext: {},
-            githubContext: {}
+            githubContext: github.context
           },
           dryRun: true
         })
@@ -40,7 +40,7 @@ export async function run(): Promise<void> {
     }
 
     console.log('response', response)
-    console.log('workflowId', workflowId)
+    console.log('process.env', process.env)
     console.log('chassyToken', chassyToken)
     console.log('parameters', parameters)
     console.log('github.context', github)
