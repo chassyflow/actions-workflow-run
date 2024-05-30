@@ -11,6 +11,9 @@ on:
 permissions:
   contents: read
 
+env:
+  GLOBAL_ENV_VAR: 'global_value'
+
 jobs:
   test-typescript:
     name: TypeScript Tests
