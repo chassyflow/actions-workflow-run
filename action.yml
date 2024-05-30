@@ -12,7 +12,7 @@ inputs:
   parameters:
     description: 'Parameters with any fields in JSON format'
     required: false
-  
+
 outputs:
   workflowExecution:
     description: 'Workflow execution result'
