@@ -62,6 +62,8 @@ jobs:
         with:
           workflowId: 'testId'
           chassyToken: 'testToken'
+        env:
+          STEP_ENV_VAR: 'step_value'
 
       - name: Print Output
         id: output
