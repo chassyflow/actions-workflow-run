@@ -29621,7 +29621,7 @@ async function run() {
             if (!rawResponse.ok) {
                 throw new Error('Network response was not ok ' + rawResponse.statusText);
             }
-            response = rawResponse.json();
+            response = await rawResponse.json();
         }
         catch (e) {
             console.debug(`Error during making POST request to ${workflowRunURL}`);
