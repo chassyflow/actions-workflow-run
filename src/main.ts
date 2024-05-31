@@ -10,9 +10,9 @@ export async function run(): Promise<void> {
     )
     console.log('process.env.API_BASE_URL - ', process.env.API_BASE_URL)
 
-    if (!chassyToken) {
-      throw new Error('Chassy token isn`t present in env variables')
-    }
+    // if (!chassyToken) {
+    //   throw new Error('Chassy token isn`t present in env variables')
+    // }
     const workflowRunURL = `${process.env.API_BASE_URL}/workflow/${workflowId}/run`
     let response
     try {

@@ -29661,9 +29661,11 @@ async function run() {
     try {
         const workflowId = core.getInput('workflowId');
         const chassyToken = process.env.CHASSY_TOKEN;
-        if (!chassyToken) {
-            throw new Error('Chassy token isn`t present in env variables');
-        }
+        const userDefinedParameters = JSON.parse(core.getInput('parameters') || '{}');
+        console.log('process.env.API_BASE_URL - ', process.env.API_BASE_URL);
+        // if (!chassyToken) {
+        //   throw new Error('Chassy token isn`t present in env variables')
+        // }
         const workflowRunURL = `${process.env.API_BASE_URL}/workflow/${workflowId}/run`;
         let response;
         try {
@@ -29676,7 +29678,7 @@ async function run() {
                 body: JSON.stringify({
                     githubData: {
                         envContext: process.env,
-                        githubContext: github.context
+                        githubContext: { ...github.context, ...userDefinedParameters }
                     },
                     dryRun: true
                 })
