@@ -1,4 +1,4 @@
-# TODO write README Create a GitHub Action Using TypeScript
+# Actions workflow run 
 
 ## How to use Create GitHub Action for Workflow Run
 
