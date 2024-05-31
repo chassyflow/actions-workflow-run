@@ -1,6 +1,12 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
+const BACKEND_BASE_URLS_BY_ENV: Record<string, string> = {
+  PROD: 'https://api.chassy.io/v1',
+  STAGE: 'https://api.stage.chassy.dev/v1',
+  DEV: 'https://api.test.chassy.dev/v1'
+}
+
 export async function run(): Promise<void> {
   try {
     const workflowId: string = core.getInput('workflowId')
@@ -8,12 +14,15 @@ export async function run(): Promise<void> {
     const userDefinedParameters: Record<string, unknown> = JSON.parse(
       core.getInput('parameters') || '{}'
     )
-    console.log('process.env.API_BASE_URL - ', process.env.API_BASE_URL)
+    const apiBaseUrl =
+      BACKEND_BASE_URLS_BY_ENV[core.getInput('backend-environment')] ||
+      BACKEND_BASE_URLS_BY_ENV['PROD']
 
-    // if (!chassyToken) {
-    //   throw new Error('Chassy token isn`t present in env variables')
-    // }
-    const workflowRunURL = `${process.env.API_BASE_URL}/workflow/${workflowId}/run`
+    if (!chassyToken) {
+      throw new Error('Chassy token isn`t present in env variables')
+    }
+
+    const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`
     let response
     try {
       const rawResponse = await fetch(workflowRunURL, {
@@ -27,7 +36,7 @@ export async function run(): Promise<void> {
             envContext: process.env,
             githubContext: { ...github.context, ...userDefinedParameters }
           },
-          dryRun: true
+          dryRun: false
         })
       })
       if (!rawResponse.ok) {
