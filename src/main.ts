@@ -31,7 +31,7 @@ export async function run(): Promise<void> {
         })
       })
       if (!rawResponse.ok) {
-        throw new Error('Network response was not ok ' + rawResponse.statusText)
+        throw new Error(`Network response was not ok ${rawResponse.statusText}`)
       }
       response = await rawResponse.json()
     } catch (e) {

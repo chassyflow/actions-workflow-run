@@ -29592,15 +29592,16 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-/**
- * The main function for the action.
- * @returns {Promise<void>} Resolves when the action is complete.
- */
 async function run() {
     try {
         const workflowId = core.getInput('workflowId');
-        const chassyToken = core.getInput('chassyToken');
-        const parameters = JSON.parse(core.getInput('parameters') || '{}');
+        const chassyToken = process.env.CHASSY_TOKEN;
+        // const parameters: Record<string, unknown> = JSON.parse(
+        //   core.getInput('parameters') || '{}'
+        // )
+        if (!chassyToken) {
+            throw new Error('Chassy token isn`t present in env variables');
+        }
         const workflowRunURL = `https://api.test.chassy.dev/v1/workflow/${workflowId}/run`;
         let response;
         try {
@@ -29612,28 +29613,22 @@ async function run() {
                 },
                 body: JSON.stringify({
                     githubData: {
-                        envContext: {},
+                        envContext: process.env,
                         githubContext: github.context
                     },
                     dryRun: true
                 })
             });
             if (!rawResponse.ok) {
-                throw new Error('Network response was not ok ' + rawResponse.statusText);
+                throw new Error(`Network response was not ok ${rawResponse.statusText}`);
             }
             response = await rawResponse.json();
         }
         catch (e) {
             console.debug(`Error during making POST request to ${workflowRunURL}`);
             if (e instanceof Error)
-                core.setFailed(e.message);
+                throw new Error(e.message);
         }
-        console.log('response', response);
-        console.log('process.env', process.env);
-        console.log('chassyToken', chassyToken);
-        console.log('parameters', parameters);
-        console.log('github.context', github);
-        // Set outputs for other workflow steps to use
         core.setOutput('workflowExecution', JSON.stringify(response));
     }
     catch (error) {
