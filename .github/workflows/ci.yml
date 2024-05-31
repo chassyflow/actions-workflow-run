@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -44,21 +45,24 @@ jobs:
         id: npm-ci-test
         run: npm run ci-test
 
-  test-action:
-    name: GitHub Actions Test
-    runs-on: ubuntu-latest
+  # uncommit for manual testing
+  # test-action:
+  #   name: GitHub Actions Test
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     CHASSY_TOKEN: ${{ secrets.CHASSY_ACCESS_TOKEN }}
 
-    steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout
+  #       id: checkout
+  #       uses: actions/checkout@v4
 
-      - name: Test Local Action
-        id: test-action
-        uses: ./
-        with:
-          milliseconds: 2000
+  #     - name: Test Local Action
+  #       id: test-action
+  #       uses: ./
+  #       with:
+  #         workflowId: 'workflow-be690a244173415aad00258b852fb2d5'
 
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
+  #     - name: Print Output
+  #       id: output
+  #       run: echo "${{ steps.test-action.outputs.workflowexecution }}"
