@@ -5991,6 +5991,71 @@ exports.Deprecation = Deprecation;
 
 /***/ }),
 
+/***/ 4227:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
+
+(function () {
+  (__nccwpck_require__(2437).config)(
+    Object.assign(
+      {},
+      __nccwpck_require__(3730),
+      __nccwpck_require__(5478)(process.argv)
+    )
+  )
+})()
+
+
+/***/ }),
+
+/***/ 5478:
+/***/ ((module) => {
+
+const re = /^dotenv_config_(encoding|path|debug|override|DOTENV_KEY)=(.+)$/
+
+module.exports = function optionMatcher (args) {
+  return args.reduce(function (acc, cur) {
+    const matches = cur.match(re)
+    if (matches) {
+      acc[matches[1]] = matches[2]
+    }
+    return acc
+  }, {})
+}
+
+
+/***/ }),
+
+/***/ 3730:
+/***/ ((module) => {
+
+// ../config.js accepts options via environment variables
+const options = {}
+
+if (process.env.DOTENV_CONFIG_ENCODING != null) {
+  options.encoding = process.env.DOTENV_CONFIG_ENCODING
+}
+
+if (process.env.DOTENV_CONFIG_PATH != null) {
+  options.path = process.env.DOTENV_CONFIG_PATH
+}
+
+if (process.env.DOTENV_CONFIG_DEBUG != null) {
+  options.debug = process.env.DOTENV_CONFIG_DEBUG
+}
+
+if (process.env.DOTENV_CONFIG_OVERRIDE != null) {
+  options.override = process.env.DOTENV_CONFIG_OVERRIDE
+}
+
+if (process.env.DOTENV_CONFIG_DOTENV_KEY != null) {
+  options.DOTENV_KEY = process.env.DOTENV_CONFIG_DOTENV_KEY
+}
+
+module.exports = options
+
+
+/***/ }),
+
 /***/ 2437:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -29596,13 +29661,10 @@ async function run() {
     try {
         const workflowId = core.getInput('workflowId');
         const chassyToken = process.env.CHASSY_TOKEN;
-        // const parameters: Record<string, unknown> = JSON.parse(
-        //   core.getInput('parameters') || '{}'
-        // )
         if (!chassyToken) {
             throw new Error('Chassy token isn`t present in env variables');
         }
-        const workflowRunURL = `https://api.test.chassy.dev/v1/workflow/${workflowId}/run`;
+        const workflowRunURL = `${process.env.API_BASE_URL}/workflow/${workflowId}/run`;
         let response;
         try {
             const rawResponse = await fetch(workflowRunURL, {
@@ -31547,9 +31609,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 /**
  * The entrypoint for the action.
  */
-const dotenv_1 = __nccwpck_require__(2437);
 const main_1 = __nccwpck_require__(399);
-(0, dotenv_1.config)();
+__nccwpck_require__(4227);
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 (0, main_1.run)();
 

@@ -5,15 +5,15 @@ export async function run(): Promise<void> {
   try {
     const workflowId: string = core.getInput('workflowId')
     const chassyToken = process.env.CHASSY_TOKEN
-    // const parameters: Record<string, unknown> = JSON.parse(
-    //   core.getInput('parameters') || '{}'
-    // )
+    const userDefinedParameters: Record<string, unknown> = JSON.parse(
+      core.getInput('parameters') || '{}'
+    )
+    console.log('process.env.API_BASE_URL - ', process.env.API_BASE_URL)
 
     if (!chassyToken) {
       throw new Error('Chassy token isn`t present in env variables')
     }
-
-    const workflowRunURL = `https://api.test.chassy.dev/v1/workflow/${workflowId}/run`
+    const workflowRunURL = `${process.env.API_BASE_URL}/workflow/${workflowId}/run`
     let response
     try {
       const rawResponse = await fetch(workflowRunURL, {
@@ -25,7 +25,7 @@ export async function run(): Promise<void> {
         body: JSON.stringify({
           githubData: {
             envContext: process.env,
-            githubContext: github.context
+            githubContext: { ...github.context, ...userDefinedParameters }
           },
           dryRun: true
         })
