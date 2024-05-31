@@ -1,12 +1,13 @@
 name: Continuous Integration
 
 on:
-  pull_request:
-    branches:
-      - main
-  push:
-    branches:
-      - main
+  # uncommit for testing purposes
+  # pull_request:
+  #   branches:
+  #     - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
     inputs:
       workflowId:
