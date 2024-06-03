@@ -15,6 +15,11 @@ export async function run(): Promise<void> {
     const userDefinedParameters: Record<string, unknown> = JSON.parse(
       core.getInput('parameters') || '{}'
     )
+    console.log(
+      'core.getInput(backendEnvironment)',
+      core.getInput('backendEnvironment')
+    )
+    console.log('BACKEND_BASE_URLS_BY_ENV', BACKEND_BASE_URLS_BY_ENV)
     const apiBaseUrl =
       BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
       BACKEND_BASE_URLS_BY_ENV['PROD']
@@ -58,6 +63,7 @@ export async function run(): Promise<void> {
     core.setOutput('workflowExecution', JSON.stringify(response))
   } catch (error) {
     // Fail the workflow run if an error occurs
+    console.error('Internal error')
     if (error instanceof Error) core.setFailed(error.message)
   }
 }

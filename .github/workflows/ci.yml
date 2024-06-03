@@ -61,7 +61,7 @@ jobs:
         uses: ./
         with:
           workflowId: 'workflow-be690a244173415aad00258b852fb2d5'
-          # backendEnvironment: 'DEV'
+          backendEnvironment: 'DEV'
 
       - name: Print Output
         id: output
