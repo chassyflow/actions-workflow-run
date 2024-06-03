@@ -38,7 +38,7 @@ export async function run(): Promise<void> {
             // user from rewriting github specific fields
             githubContext: { ...userDefinedParameters, ...github.context }
           },
-          dryRun: true
+          dryRun: false
         })
       })
       if (!rawResponse.ok) {

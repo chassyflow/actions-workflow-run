@@ -29255,7 +29255,7 @@ async function run() {
                         // user from rewriting github specific fields
                         githubContext: { ...userDefinedParameters, ...github.context }
                     },
-                    dryRun: true
+                    dryRun: false
                 })
             });
             if (!rawResponse.ok) {
