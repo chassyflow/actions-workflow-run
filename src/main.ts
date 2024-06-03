@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import jq from 'node-jq'
+const jq = require('node-jq')
 
 const BACKEND_BASE_URLS_BY_ENV: Record<string, string> = {
   PROD: 'https://api.chassy.io/v1',

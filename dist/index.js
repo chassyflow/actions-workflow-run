@@ -44816,14 +44816,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const node_jq_1 = __importDefault(__nccwpck_require__(7668));
+const jq = __nccwpck_require__(7668);
 const BACKEND_BASE_URLS_BY_ENV = {
     PROD: 'https://api.chassy.io/v1',
     STAGE: 'https://api.stage.chassy.dev/v1',
@@ -44868,8 +44865,8 @@ async function run() {
             if (e instanceof Error)
                 throw new Error(e.message);
         }
-        console.log('jq', node_jq_1.default);
-        const formattedOutput = await node_jq_1.default.run('.', response, {
+        console.log('jq', jq);
+        const formattedOutput = await jq.run('.', response, {
             input: 'json',
             output: 'pretty'
         });
