@@ -51,11 +51,11 @@ export async function run(): Promise<void> {
       if (e instanceof Error) throw new Error(e.message)
     }
 
-    const formattedOutput = await jq.run('.', JSON.stringify(response), {
-      input: 'string',
-      output: 'json'
-    })
-    core.setOutput('workflowExecution', formattedOutput)
+    // const formattedOutput = await jq.run('.', JSON.stringify(response), {
+    //   input: 'string',
+    //   output: 'json'
+    // })
+    core.setOutput('workflowExecution', JSON.stringify(response))
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
