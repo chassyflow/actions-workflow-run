@@ -15,11 +15,6 @@ export async function run(): Promise<void> {
     const userDefinedParameters: Record<string, unknown> = JSON.parse(
       core.getInput('parameters') || '{}'
     )
-    console.log(
-      'core.getInput(backendEnvironment)',
-      core.getInput('backendEnvironment')
-    )
-    console.log('BACKEND_BASE_URLS_BY_ENV', BACKEND_BASE_URLS_BY_ENV)
     const apiBaseUrl =
       BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
       BACKEND_BASE_URLS_BY_ENV['PROD']
@@ -56,11 +51,11 @@ export async function run(): Promise<void> {
       if (e instanceof Error) throw new Error(e.message)
     }
 
-    // const formattedOutput = await jq.run('.', JSON.stringify(response), {
-    //   input: 'string',
-    //   output: 'json'
-    // })
-    core.setOutput('workflowExecution', JSON.stringify(response))
+    const formattedOutput = await jq.run('.', JSON.stringify(response), {
+      input: 'string',
+      output: 'json'
+    })
+    core.setOutput('workflowExecution', formattedOutput)
   } catch (error) {
     // Fail the workflow run if an error occurs
     console.error('Internal error')
