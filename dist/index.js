@@ -45267,7 +45267,7 @@ async function run() {
         const workflowId = core.getInput('workflowId');
         const chassyToken = process.env.CHASSY_TOKEN;
         const userDefinedParameters = JSON.parse(core.getInput('parameters') || '{}');
-        const apiBaseUrl = BACKEND_BASE_URLS_BY_ENV[core.getInput('backend-environment')] ||
+        const apiBaseUrl = BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
             BACKEND_BASE_URLS_BY_ENV['PROD'];
         if (!chassyToken) {
             throw new Error('Chassy token isn`t present in env variables');

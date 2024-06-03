@@ -16,7 +16,7 @@ export async function run(): Promise<void> {
       core.getInput('parameters') || '{}'
     )
     const apiBaseUrl =
-      BACKEND_BASE_URLS_BY_ENV[core.getInput('backend-environment')] ||
+      BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
       BACKEND_BASE_URLS_BY_ENV['PROD']
 
     if (!chassyToken) {
