@@ -1,6 +1,5 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-const jq = require('node-jq')
 
 const BACKEND_BASE_URLS_BY_ENV: Record<string, string> = {
   PROD: 'https://api.chassy.io/v1',
@@ -50,12 +49,8 @@ export async function run(): Promise<void> {
       console.debug(`Error during making POST request to ${workflowRunURL}`)
       if (e instanceof Error) throw new Error(e.message)
     }
-    console.log('jq', jq)
-    const formattedOutput = await jq.run('.', response, {
-      input: 'json',
-      output: 'pretty'
-    })
-    core.setOutput('workflowExecution', formattedOutput)
+
+    core.setOutput('workflowExecution', JSON.stringify(response, null, 2))
   } catch (error) {
     // Fail the workflow run if an error occurs
     console.error('Internal error')
