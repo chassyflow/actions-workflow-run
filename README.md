@@ -1,4 +1,4 @@
-# Actions workflow run 
+# Actions workflow run
 
 ## How to use Create GitHub Action for Workflow Run
 
