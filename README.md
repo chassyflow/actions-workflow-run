@@ -1,4 +1,4 @@
-# Actions workflow run 
+# Actions workflow run
 
 ## How to use Create GitHub Action for Workflow Run
 
@@ -11,7 +11,7 @@ workflowId:
 parameters:
   description: 'Parameters with any fields in JSON format'
   required: false
-backend-environment:
+backendEnvironment:
   description:
     'Defines what Chassy backend environment to use. Can be equal to PROD,
     STAGE, DEV'

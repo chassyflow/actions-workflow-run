@@ -15,7 +15,7 @@ export async function run(): Promise<void> {
       core.getInput('parameters') || '{}'
     )
     const apiBaseUrl =
-      BACKEND_BASE_URLS_BY_ENV[core.getInput('backend-environment')] ||
+      BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
       BACKEND_BASE_URLS_BY_ENV['PROD']
 
     if (!chassyToken) {
@@ -50,9 +50,10 @@ export async function run(): Promise<void> {
       if (e instanceof Error) throw new Error(e.message)
     }
 
-    core.setOutput('workflowExecution', JSON.stringify(response))
+    core.setOutput('workflowExecution', JSON.stringify(response, null, 2))
   } catch (error) {
     // Fail the workflow run if an error occurs
+    console.error('Internal error')
     if (error instanceof Error) core.setFailed(error.message)
   }
 }
