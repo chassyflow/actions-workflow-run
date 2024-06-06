@@ -34,9 +34,10 @@ export async function run(): Promise<void> {
         body: JSON.stringify({
           githubData: {
             envContext: process.env,
-            // spread github.context object after userDefinedParameters for preventing
-            // user from rewriting github specific fields
-            githubContext: { ...userDefinedParameters, ...github.context }
+            githubContext: { ...userDefinedParameters, ...github.context },
+            ...(Object.keys(userDefinedParameters).length && {
+              parameters: userDefinedParameters
+            })
           },
           dryRun: false
         })
