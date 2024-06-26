@@ -29,7 +29,7 @@ export async function run(): Promise<void> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${chassyToken}`
+          'Authorization': chassyToken
         },
         body: JSON.stringify({
           githubData: {
@@ -38,8 +38,7 @@ export async function run(): Promise<void> {
             ...(Object.keys(userDefinedParameters).length && {
               parameters: userDefinedParameters
             })
-          },
-          dryRun: false
+          }
         })
       })
       if (!rawResponse.ok) {
