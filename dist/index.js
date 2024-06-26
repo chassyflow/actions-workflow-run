@@ -29246,7 +29246,7 @@ async function run() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${chassyToken}`
+                    Authorization: `${chassyToken}`
                 },
                 body: JSON.stringify({
                     githubData: {
@@ -29255,8 +29255,7 @@ async function run() {
                         ...(Object.keys(userDefinedParameters).length && {
                             parameters: userDefinedParameters
                         })
-                    },
-                    dryRun: false
+                    }
                 })
             });
             if (!rawResponse.ok) {
