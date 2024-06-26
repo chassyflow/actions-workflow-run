@@ -29,7 +29,7 @@ export async function run(): Promise<void> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          `Authorization`: `${chassyToken}`
+          Authorization: `${chassyToken}`
         },
         body: JSON.stringify({
           githubData: {
