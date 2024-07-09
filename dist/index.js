@@ -29242,7 +29242,7 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const constants_1 = __nccwpck_require__(9042);
-const waitTillWorkflowExecuted_1 = __nccwpck_require__(60);
+const wait_till_workflow_executed_1 = __nccwpck_require__(9453);
 async function run() {
     try {
         const workflowId = core.getInput('workflowId');
@@ -29285,7 +29285,7 @@ async function run() {
         const workflowExecutionId = response.id;
         core.info(`Workflow steps \n ${JSON.stringify(response.graph.steps, null, 2)}`);
         core.notice(`You can find the visual representation of the steps graph on [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`);
-        const workflowExecution = await (0, waitTillWorkflowExecuted_1.waitTillWorkflowExecuted)({
+        const workflowExecution = await (0, wait_till_workflow_executed_1.waitTillWorkflowExecuted)({
             accessToken: chassyToken,
             workflowExecutionId,
             workflowRunURL
@@ -29326,6 +29326,7 @@ exports.run = run;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WorkflowStatuses = void 0;
+/* eslint-disable no-shadow */
 var WorkflowStatuses;
 (function (WorkflowStatuses) {
     WorkflowStatuses["SUCCESS"] = "SUCCESS";
@@ -29338,7 +29339,7 @@ var WorkflowStatuses;
 
 /***/ }),
 
-/***/ 60:
+/***/ 9453:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -29371,45 +29372,47 @@ exports.waitTillWorkflowExecuted = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const types_1 = __nccwpck_require__(5077);
 const constants_1 = __nccwpck_require__(9042);
-const waitTillWorkflowExecuted = ({ accessToken, workflowExecutionId, workflowRunURL }) => new Promise((res, rej) => {
-    const fetchWorkflowExecution = () => fetch(`${workflowRunURL}/${workflowExecutionId}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: accessToken
-        }
+async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, workflowRunURL }) {
+    return new Promise((res, rej) => {
+        const fetchWorkflowExecution = async () => fetch(`${workflowRunURL}/${workflowExecutionId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: accessToken
+            }
+        });
+        const checkWorkflowExecution = async () => {
+            try {
+                const rawResponse = await fetchWorkflowExecution();
+                if (!rawResponse.ok) {
+                    throw new Error(`Network response was not ok ${rawResponse.statusText}`);
+                }
+                const response = await rawResponse.json();
+                if (response.status === types_1.WorkflowStatuses.SUCCESS) {
+                    res(response);
+                    return;
+                }
+                if (response.status === types_1.WorkflowStatuses.CHASSY_ERROR ||
+                    response.status === types_1.WorkflowStatuses.CONFIG_ERROR ||
+                    response.status === types_1.WorkflowStatuses.EXECUTION_ERROR) {
+                    rej(response.errorMessage);
+                }
+                if (response.status === types_1.WorkflowStatuses.IN_PROGRESS) {
+                    core.info(`Workflow still in progress, please wait`);
+                }
+            }
+            catch (e) {
+                console.debug(`Error during making GET request to get workflow run info ${workflowRunURL}/${workflowExecutionId}`);
+                if (e instanceof Error)
+                    rej(e.message);
+            }
+            finally {
+                clearInterval(waitInterval);
+            }
+        };
+        const waitInterval = setInterval(checkWorkflowExecution, constants_1.RETRY_IN_SECONDS * 1000);
     });
-    const checkWorkflowExecution = async () => {
-        try {
-            const rawResponse = await fetchWorkflowExecution();
-            if (!rawResponse.ok) {
-                throw new Error(`Network response was not ok ${rawResponse.statusText}`);
-            }
-            const response = await rawResponse.json();
-            if (response.status === types_1.WorkflowStatuses.SUCCESS) {
-                res(response);
-                return;
-            }
-            if (response.status === types_1.WorkflowStatuses.CHASSY_ERROR ||
-                response.status === types_1.WorkflowStatuses.CONFIG_ERROR ||
-                response.status === types_1.WorkflowStatuses.EXECUTION_ERROR) {
-                rej(response.errorMessage);
-            }
-            if (response.status === types_1.WorkflowStatuses.IN_PROGRESS) {
-                core.info(`Workflow still in progress, please wait`);
-            }
-        }
-        catch (e) {
-            console.debug(`Error during making GET request to get workflow run info ${workflowRunURL}/${workflowExecutionId}`);
-            if (e instanceof Error)
-                rej(e.message);
-        }
-        finally {
-            clearInterval(waitInterval);
-        }
-    };
-    const waitInterval = setInterval(checkWorkflowExecution, constants_1.RETRY_IN_SECONDS * 1000);
-});
+}
 exports.waitTillWorkflowExecuted = waitTillWorkflowExecuted;
 
 

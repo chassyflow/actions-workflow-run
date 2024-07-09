@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import { WorkflowExecution, WorkflowStatuses } from './types'
 import { RETRY_IN_SECONDS } from './constants'
 
-export const waitTillWorkflowExecuted = ({
+export async function waitTillWorkflowExecuted({
   accessToken,
   workflowExecutionId,
   workflowRunURL
@@ -10,9 +10,9 @@ export const waitTillWorkflowExecuted = ({
   accessToken: string
   workflowExecutionId: string
   workflowRunURL: string
-}): Promise<WorkflowExecution> =>
-  new Promise((res, rej) => {
-    const fetchWorkflowExecution = () =>
+}): Promise<WorkflowExecution> {
+  return new Promise((res, rej) => {
+    const fetchWorkflowExecution = async (): Promise<Response> =>
       fetch(`${workflowRunURL}/${workflowExecutionId}`, {
         method: 'GET',
         headers: {
@@ -21,7 +21,7 @@ export const waitTillWorkflowExecuted = ({
         }
       })
 
-    const checkWorkflowExecution = async () => {
+    const checkWorkflowExecution = async (): Promise<void> => {
       try {
         const rawResponse = await fetchWorkflowExecution()
         if (!rawResponse.ok) {
@@ -61,3 +61,4 @@ export const waitTillWorkflowExecuted = ({
       RETRY_IN_SECONDS * 1000
     )
   })
+}

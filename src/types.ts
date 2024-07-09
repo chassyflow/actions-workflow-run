@@ -1,3 +1,12 @@
+/* eslint-disable no-shadow */
+export enum WorkflowStatuses {
+  SUCCESS = 'SUCCESS',
+  IN_PROGRESS = 'IN_PROGRESS',
+  CONFIG_ERROR = 'CONFIG_ERROR',
+  CHASSY_ERROR = 'CHASSY_ERROR',
+  EXECUTION_ERROR = 'EXECUTION_ERROR'
+}
+
 export type Package = {
   id: string
   sha256: string
@@ -45,12 +54,4 @@ export type WorkflowExecution = {
     | 'CONFIG_ERROR'
     | 'CHASSY_ERROR'
     | 'EXECUTION_ERROR'
-}
-
-export enum WorkflowStatuses {
-  SUCCESS = 'SUCCESS',
-  IN_PROGRESS = 'IN_PROGRESS',
-  CONFIG_ERROR = 'CONFIG_ERROR',
-  CHASSY_ERROR = 'CHASSY_ERROR',
-  EXECUTION_ERROR = 'EXECUTION_ERROR'
 }

@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { BACKEND_BASE_URLS_BY_ENV } from './constants'
-import { waitTillWorkflowExecuted } from './waitTillWorkflowExecuted'
+import { waitTillWorkflowExecuted } from './wait-till-workflow-executed'
 
 export async function run(): Promise<void> {
   try {
