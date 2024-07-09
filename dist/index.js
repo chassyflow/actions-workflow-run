@@ -29192,6 +29192,23 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 9042:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RETRY_IN_SECONDS = exports.BACKEND_BASE_URLS_BY_ENV = void 0;
+exports.BACKEND_BASE_URLS_BY_ENV = {
+    PROD: 'https://api.chassy.io/v1',
+    STAGE: 'https://api.stage.chassy.dev/v1',
+    DEV: 'https://api.test.chassy.dev/v1'
+};
+exports.RETRY_IN_SECONDS = 30;
+
+
+/***/ }),
+
 /***/ 399:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -29224,18 +29241,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const BACKEND_BASE_URLS_BY_ENV = {
-    PROD: 'https://api.chassy.io/v1',
-    STAGE: 'https://api.stage.chassy.dev/v1',
-    DEV: 'https://api.test.chassy.dev/v1'
-};
+const constants_1 = __nccwpck_require__(9042);
+const wait_till_workflow_executed_1 = __nccwpck_require__(9453);
 async function run() {
     try {
         const workflowId = core.getInput('workflowId');
         const chassyToken = process.env.CHASSY_TOKEN;
         const userDefinedParameters = JSON.parse(core.getInput('parameters') || '{}');
-        const apiBaseUrl = BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
-            BACKEND_BASE_URLS_BY_ENV['PROD'];
+        const apiBaseUrl = constants_1.BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
+            constants_1.BACKEND_BASE_URLS_BY_ENV['PROD'];
         if (!chassyToken) {
             throw new Error('Chassy token isn`t present in env variables');
         }
@@ -29246,7 +29260,7 @@ async function run() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `${chassyToken}`
+                    Authorization: chassyToken
                 },
                 body: JSON.stringify({
                     githubData: {
@@ -29268,16 +29282,138 @@ async function run() {
             if (e instanceof Error)
                 throw new Error(e.message);
         }
-        core.setOutput('workflowExecution', JSON.stringify(response, null, 2));
+        const workflowExecutionId = response.id;
+        core.info(`Workflow steps \n ${JSON.stringify(response.graph.steps, null, 2)}`);
+        core.notice(`You can find the visual representation of the steps graph on [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`);
+        const workflowExecution = await (0, wait_till_workflow_executed_1.waitTillWorkflowExecuted)({
+            accessToken: chassyToken,
+            workflowExecutionId,
+            workflowRunURL
+        });
+        core.info('\u001b[32mWorkflow is executed successfully!');
+        core.startGroup('Full workflow run info');
+        console.log(JSON.stringify(workflowExecution, null, 2));
+        core.endGroup();
+        if (workflowExecution.packages) {
+            core.notice(`Created packages`);
+            console.log(JSON.stringify(workflowExecution.packages, null, 2));
+        }
+        if (workflowExecution.releases) {
+            core.notice(`Created releases`);
+            console.log(JSON.stringify(workflowExecution.releases, null, 2));
+        }
+        if (workflowExecution.deployments) {
+            core.notice(`Created deployments`);
+            console.log(JSON.stringify(workflowExecution.deployments, null, 2));
+        }
+        core.notice(`For more information, visit [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`);
     }
     catch (error) {
         // Fail the workflow run if an error occurs
-        console.error('Internal error');
         if (error instanceof Error)
             core.setFailed(error.message);
     }
 }
 exports.run = run;
+
+
+/***/ }),
+
+/***/ 5077:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WorkflowStatuses = void 0;
+/* eslint-disable no-shadow */
+var WorkflowStatuses;
+(function (WorkflowStatuses) {
+    WorkflowStatuses["SUCCESS"] = "SUCCESS";
+    WorkflowStatuses["IN_PROGRESS"] = "IN_PROGRESS";
+    WorkflowStatuses["CONFIG_ERROR"] = "CONFIG_ERROR";
+    WorkflowStatuses["CHASSY_ERROR"] = "CHASSY_ERROR";
+    WorkflowStatuses["EXECUTION_ERROR"] = "EXECUTION_ERROR";
+})(WorkflowStatuses || (exports.WorkflowStatuses = WorkflowStatuses = {}));
+
+
+/***/ }),
+
+/***/ 9453:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.waitTillWorkflowExecuted = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const types_1 = __nccwpck_require__(5077);
+const constants_1 = __nccwpck_require__(9042);
+async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, workflowRunURL }) {
+    return new Promise((res, rej) => {
+        const fetchWorkflowExecution = async () => fetch(`${workflowRunURL}/${workflowExecutionId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: accessToken
+            }
+        });
+        const checkWorkflowExecution = async () => {
+            try {
+                const rawResponse = await fetchWorkflowExecution();
+                if (!rawResponse.ok) {
+                    throw new Error(`Network response was not ok ${rawResponse.statusText}`);
+                }
+                const response = await rawResponse.json();
+                if (response.status === types_1.WorkflowStatuses.SUCCESS) {
+                    res(response);
+                    return;
+                }
+                if (response.status === types_1.WorkflowStatuses.CHASSY_ERROR ||
+                    response.status === types_1.WorkflowStatuses.CONFIG_ERROR ||
+                    response.status === types_1.WorkflowStatuses.EXECUTION_ERROR) {
+                    rej(response.errorMessage);
+                }
+                if (response.status === types_1.WorkflowStatuses.IN_PROGRESS) {
+                    core.info(`Workflow still in progress, please wait`);
+                }
+            }
+            catch (e) {
+                console.debug(`Error during making GET request to get workflow run info ${workflowRunURL}/${workflowExecutionId}`);
+                if (e instanceof Error)
+                    rej(e.message);
+            }
+            finally {
+                clearInterval(waitInterval);
+            }
+        };
+        const waitInterval = setInterval(checkWorkflowExecution, constants_1.RETRY_IN_SECONDS * 1000);
+    });
+}
+exports.waitTillWorkflowExecuted = waitTillWorkflowExecuted;
 
 
 /***/ }),

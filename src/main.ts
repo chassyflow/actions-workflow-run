@@ -1,11 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-
-const BACKEND_BASE_URLS_BY_ENV: Record<string, string> = {
-  PROD: 'https://api.chassy.io/v1',
-  STAGE: 'https://api.stage.chassy.dev/v1',
-  DEV: 'https://api.test.chassy.dev/v1'
-}
+import { BACKEND_BASE_URLS_BY_ENV } from './constants'
+import { waitTillWorkflowExecuted } from './wait-till-workflow-executed'
 
 export async function run(): Promise<void> {
   try {
@@ -29,7 +25,7 @@ export async function run(): Promise<void> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `${chassyToken}`
+          Authorization: chassyToken
         },
         body: JSON.stringify({
           githubData: {
@@ -50,10 +46,47 @@ export async function run(): Promise<void> {
       if (e instanceof Error) throw new Error(e.message)
     }
 
-    core.setOutput('workflowExecution', JSON.stringify(response, null, 2))
+    const workflowExecutionId = response.id
+
+    core.info(
+      `Workflow steps \n ${JSON.stringify(response.graph.steps, null, 2)}`
+    )
+    core.notice(
+      `You can find the visual representation of the steps graph on [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`
+    )
+
+    const workflowExecution = await waitTillWorkflowExecuted({
+      accessToken: chassyToken,
+      workflowExecutionId,
+      workflowRunURL
+    })
+
+    core.info('\u001b[32mWorkflow is executed successfully!')
+
+    core.startGroup('Full workflow run info')
+    console.log(JSON.stringify(workflowExecution, null, 2))
+    core.endGroup()
+
+    if (workflowExecution.packages) {
+      core.notice(`Created packages`)
+      console.log(JSON.stringify(workflowExecution.packages, null, 2))
+    }
+
+    if (workflowExecution.releases) {
+      core.notice(`Created releases`)
+      console.log(JSON.stringify(workflowExecution.releases, null, 2))
+    }
+
+    if (workflowExecution.deployments) {
+      core.notice(`Created deployments`)
+      console.log(JSON.stringify(workflowExecution.deployments, null, 2))
+    }
+
+    core.notice(
+      `For more information, visit [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`
+    )
   } catch (error) {
     // Fail the workflow run if an error occurs
-    console.error('Internal error')
     if (error instanceof Error) core.setFailed(error.message)
   }
 }
