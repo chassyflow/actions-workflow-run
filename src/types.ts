@@ -49,11 +49,11 @@ export type WorkflowExecution = {
     status: 'PENDING' | 'INPROGRESS' | 'CANCELED' | 'FAILED' | 'COMPLETE'
   }[]
   status:
-  | 'SUCCESS'
-  | 'IN_PROGRESS'
-  | 'CONFIG_ERROR'
-  | 'CHASSY_ERROR'
-  | 'EXECUTION_ERROR'
+    | 'SUCCESS'
+    | 'IN_PROGRESS'
+    | 'CONFIG_ERROR'
+    | 'CHASSY_ERROR'
+    | 'EXECUTION_ERROR'
 }
 
 export type TokenData = {

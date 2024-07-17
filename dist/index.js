@@ -29246,13 +29246,41 @@ const wait_till_workflow_executed_1 = __nccwpck_require__(9453);
 async function run() {
     try {
         const workflowId = core.getInput('workflowId');
-        const chassyToken = process.env.CHASSY_TOKEN;
+        // Q: Should the environment variable name be changed?
+        const chassyRefreshToken = process.env.CHASSY_TOKEN;
         const userDefinedParameters = JSON.parse(core.getInput('parameters') || '{}');
         const apiBaseUrl = constants_1.BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
             constants_1.BACKEND_BASE_URLS_BY_ENV['PROD'];
-        if (!chassyToken) {
-            throw new Error('Chassy token isn`t present in env variables');
+        if (!chassyRefreshToken) {
+            throw new Error('Chassy refresh token isn`t present in env variables');
         }
+        // use refresh token to get valid access token
+        const refreshTokenURL = `${apiBaseUrl}/token/refresh`;
+        let refreshTokenResponse;
+        try {
+            const rawResponse = await fetch(refreshTokenURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    token: chassyRefreshToken
+                })
+            });
+            if (!rawResponse.ok) {
+                throw new Error(`Network response was not ok ${rawResponse.statusText}`);
+            }
+            refreshTokenResponse = await rawResponse.json();
+        }
+        catch (e) {
+            console.debug('Failed to get refresh token');
+            if (e instanceof Error)
+                throw new Error(e.message);
+            else
+                return; // should never run, just used to tell type-checker to chill
+        }
+        const chassyAuthToken = Buffer.from(refreshTokenResponse.token, 'base64').toString();
+        // run workflow
         const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`;
         let response;
         try {
@@ -29260,7 +29288,7 @@ async function run() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: chassyToken
+                    Authorization: chassyAuthToken
                 },
                 body: JSON.stringify({
                     githubData: {
@@ -29286,7 +29314,7 @@ async function run() {
         core.info(`Workflow steps \n ${JSON.stringify(response.graph.steps, null, 2)}`);
         core.notice(`You can find the visual representation of the steps graph on [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`);
         const workflowExecution = await (0, wait_till_workflow_executed_1.waitTillWorkflowExecuted)({
-            accessToken: chassyToken,
+            accessToken: chassyAuthToken,
             workflowExecutionId,
             workflowRunURL
         });

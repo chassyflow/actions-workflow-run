@@ -27,11 +27,11 @@ export async function run(): Promise<void> {
       const rawResponse = await fetch(refreshTokenURL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          token: chassyRefreshToken,
-        }),
+          token: chassyRefreshToken
+        })
       })
       if (!rawResponse.ok) {
         throw new Error(`Network response was not ok ${rawResponse.statusText}`)
@@ -43,7 +43,10 @@ export async function run(): Promise<void> {
       else return // should never run, just used to tell type-checker to chill
     }
 
-    const chassyToken = Buffer.from(refreshTokenResponse.token, 'base64').toString();
+    const chassyAuthToken = Buffer.from(
+      refreshTokenResponse.token,
+      'base64'
+    ).toString()
 
     // run workflow
     const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`
@@ -53,7 +56,7 @@ export async function run(): Promise<void> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: chassyToken
+          Authorization: chassyAuthToken
         },
         body: JSON.stringify({
           githubData: {
@@ -84,7 +87,7 @@ export async function run(): Promise<void> {
     )
 
     const workflowExecution = await waitTillWorkflowExecuted({
-      accessToken: chassyToken,
+      accessToken: chassyAuthToken,
       workflowExecutionId,
       workflowRunURL
     })
