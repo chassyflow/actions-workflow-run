@@ -2,11 +2,13 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { BACKEND_BASE_URLS_BY_ENV } from './constants'
 import { waitTillWorkflowExecuted } from './wait-till-workflow-executed'
+import { TokenData } from './types'
 
 export async function run(): Promise<void> {
   try {
     const workflowId: string = core.getInput('workflowId')
-    const chassyToken = process.env.CHASSY_TOKEN
+    // Q: Should the environment variable name be changed?
+    const chassyRefreshToken = process.env.CHASSY_TOKEN
     const userDefinedParameters: Record<string, unknown> = JSON.parse(
       core.getInput('parameters') || '{}'
     )
@@ -14,10 +16,34 @@ export async function run(): Promise<void> {
       BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
       BACKEND_BASE_URLS_BY_ENV['PROD']
 
-    if (!chassyToken) {
-      throw new Error('Chassy token isn`t present in env variables')
+    if (!chassyRefreshToken) {
+      throw new Error('Chassy refresh token isn`t present in env variables')
     }
 
+    // use refresh token to get valid access token
+    const refreshTokenURL = `${apiBaseUrl}/token/refresh`
+    let refreshTokenResponse: TokenData
+    try {
+      const rawResponse = await fetch(refreshTokenURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token: chassyRefreshToken,
+        }),
+      })
+      if (!rawResponse.ok) {
+        throw new Error(`Network response was not ok ${rawResponse.statusText}`)
+      }
+      refreshTokenResponse = await rawResponse.json()
+    } catch (e) {
+      console.debug('Failed to get refresh token')
+      if (e instanceof Error) throw new Error(e.message)
+      else return // should never run, just used to tell type-checker to chill
+    }
+
+    // run workflow
     const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`
     let response
     try {
@@ -25,7 +51,7 @@ export async function run(): Promise<void> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: chassyToken
+          Authorization: refreshTokenResponse.token
         },
         body: JSON.stringify({
           githubData: {
@@ -56,7 +82,7 @@ export async function run(): Promise<void> {
     )
 
     const workflowExecution = await waitTillWorkflowExecuted({
-      accessToken: chassyToken,
+      accessToken: refreshTokenResponse.token,
       workflowExecutionId,
       workflowRunURL
     })
