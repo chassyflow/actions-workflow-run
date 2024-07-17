@@ -43,6 +43,8 @@ export async function run(): Promise<void> {
       else return // should never run, just used to tell type-checker to chill
     }
 
+    const chassyToken = Buffer.from(refreshTokenResponse.token, 'base64').toString();
+
     // run workflow
     const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`
     let response
@@ -51,7 +53,7 @@ export async function run(): Promise<void> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: refreshTokenResponse.token
+          Authorization: chassyToken
         },
         body: JSON.stringify({
           githubData: {
@@ -82,7 +84,7 @@ export async function run(): Promise<void> {
     )
 
     const workflowExecution = await waitTillWorkflowExecuted({
-      accessToken: refreshTokenResponse.token,
+      accessToken: chassyToken,
       workflowExecutionId,
       workflowRunURL
     })
