@@ -45,26 +45,26 @@ jobs:
         id: npm-ci-test
         run: npm run ci-test
 
-  # uncommit for manual testing
-  test-action:
-    name: GitHub Actions Test
-    runs-on: ubuntu-latest
-    env:
-      CHASSY_TOKEN:
-        'Bearer
-        eyJraWQiOiJ6a2QrV3FsNUg5S2J0dG1UYUJMcEdISUFuVDBEaDBNc3ByQ1wvU3NxRm9hWT0iLCJhbGciOiJSUzI1NiJ9.eyJhdF9oYXNoIjoiTW9YbDFKOFNNS2ZiVGprbU1IN2xtZyIsInN1YiI6IjYzZTU3NzNiLTFiYTgtNDUxZi04ZDJkLTNjMzhlNzc2NWRkYyIsImNvZ25pdG86Z3JvdXBzIjpbInVzLXdlc3QtMl9hVGowbFpVdnJfR29vZ2xlIl0sImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtd2VzdC0yLmFtYXpvbmF3cy5jb21cL3VzLXdlc3QtMl9hVGowbFpVdnIiLCJjb2duaXRvOnVzZXJuYW1lIjoiR29vZ2xlXzExNDc4NzQzMDk5Mzc0MDk4MzE3NiIsImdpdmVuX25hbWUiOiJ0ZW1hY2h5IiwicGljdHVyZSI6Imh0dHBzOlwvXC9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tXC9hXC9BQ2c4b2NKVkhkaUZVdWZjZGM0WUt5enpBYUg5bzdRWUh2ZlJMVHZ2YVpiRnA5dWw2QlM0T1E9czk2LWMiLCJvcmlnaW5fanRpIjoiNTc1ZDIwZTEtNGM1NC00ZTlmLWI4MjgtNjljODE0MGI3ZmJlIiwiYXVkIjoiM2Y4anFtZWdrZzgycW5pc3JhZnFvN3JpM2oiLCJpZGVudGl0aWVzIjpbeyJ1c2VySWQiOiIxMTQ3ODc0MzA5OTM3NDA5ODMxNzYiLCJwcm92aWRlck5hbWUiOiJHb29nbGUiLCJwcm92aWRlclR5cGUiOiJHb29nbGUiLCJpc3N1ZXIiOm51bGwsInByaW1hcnkiOiJ0cnVlIiwiZGF0ZUNyZWF0ZWQiOiIxNzE4MzgyMzg1Njk2In1dLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcyMDUxNjEzNCwiZXhwIjoxNzIwNjMyNTcxLCJpYXQiOjE3MjA1ODkzNzEsImZhbWlseV9uYW1lIjoi0KLQvtGA0YfQtdC90Y7QuiIsImp0aSI6IjA0ZGEwN2EwLWFkZjItNGQ2ZC04Mzg0LWJjZmYzYzZlYmVhYyIsImVtYWlsIjoidGVtdWNoaW4yNkBnbWFpbC5jb20ifQ.DKVjyoz6XWxvIvxFpN6w8oOrBvC0hUqde_cYEEG54WyYux6ShOBEVU0bDmcg1XcV3p-b7mZdtsmksunc-ofRF0ju9FHRPzlF7df4UDn6gpfQ7nrq4fR4Woe_J8St2UEwTd2AKQ7UEofSuUcNl14PPIUvfxjO79gq81ahhKitcDRN9RXSx6OW1R3UJzTBzc0htjve60CVesuWCDuqZdVG_xhsEaLkzhJ101Ob7Jo6F6cmbY2RQ_BMeY5n8O9mQMXeolEYtfMHBourTBRY79xVzorkDIrfn8H0Uf3vaY9NN2VEiZT0KW53hOtdv1qMaifF81ft3x0UvC9lhIGbNBKdXw'
+  # uncomment for manual testing
+  # test-action:
+  #   name: GitHub Actions Test
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     CHASSY_TOKEN:
+  #       'Bearer
+  #       eyJraWQ'
 
-    steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout
+  #       id: checkout
+  #       uses: actions/checkout@v4
 
-      - name: Test Local Action
-        id: test-action
-        uses: ./
-        with:
-          workflowId: 'workflow-c2f522acc2534d639827970d8c2034ee'
-          backendEnvironment: 'DEV'
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.workflowexecution }}"
+  #     - name: Test Local Action
+  #       id: test-action
+  #       uses: ./
+  #       with:
+  #         workflowId: 'workflow-c2f522acc2534d639827970d8c2034ee'
+  #         backendEnvironment: 'DEV'
+  #     - name: Print Output
+  #       id: output
+  #       run: echo "${{ steps.test-action.outputs.workflowexecution }}"
