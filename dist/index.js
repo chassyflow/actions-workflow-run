@@ -29335,6 +29335,7 @@ async function run() {
             console.log(JSON.stringify(workflowExecution.deployments, null, 2));
         }
         core.notice(`For more information, visit [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`);
+        core.setOutput('workflowExecution', JSON.stringify(workflowExecution, null, 2));
     }
     catch (error) {
         // Fail the workflow run if an error occurs
@@ -29368,36 +29369,12 @@ var WorkflowStatuses;
 /***/ }),
 
 /***/ 9453:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.waitTillWorkflowExecuted = void 0;
-const core = __importStar(__nccwpck_require__(2186));
 const types_1 = __nccwpck_require__(5077);
 const constants_1 = __nccwpck_require__(9042);
 async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, workflowRunURL }) {
@@ -29426,7 +29403,7 @@ async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, work
                     rej(response.errorMessage);
                 }
                 if (response.status === types_1.WorkflowStatuses.IN_PROGRESS) {
-                    core.info(`Workflow still in progress, please wait`);
+                    console.log(`Workflow still in progress, please wait`);
                 }
             }
             catch (e) {

@@ -116,6 +116,11 @@ export async function run(): Promise<void> {
     core.notice(
       `For more information, visit [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`
     )
+
+    core.setOutput(
+      'workflowExecution',
+      JSON.stringify(workflowExecution, null, 2)
+    )
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
