@@ -45,12 +45,14 @@ jobs:
         id: npm-ci-test
         run: npm run ci-test
 
-  # uncommit for manual testing
+  # uncomment for manual testing
   # test-action:
   #   name: GitHub Actions Test
   #   runs-on: ubuntu-latest
   #   env:
-  #     CHASSY_TOKEN: ${{ secrets.CHASSY_ACCESS_TOKEN }}
+  #     CHASSY_TOKEN:
+  #       'Bearer
+  #       eyJraWQ'
 
   #   steps:
   #     - name: Checkout
@@ -61,7 +63,7 @@ jobs:
   #       id: test-action
   #       uses: ./
   #       with:
-  #         workflowId: 'workflow-be690a244173415aad00258b852fb2d5'
+  #         workflowId: 'workflow-c2f522acc2534d639827970d8c2034ee'
   #         backendEnvironment: 'DEV'
   #     - name: Print Output
   #       id: output

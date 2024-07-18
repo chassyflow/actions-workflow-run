@@ -1,4 +1,3 @@
-import * as core from '@actions/core'
 import { WorkflowExecution, WorkflowStatuses } from './types'
 import { RETRY_IN_SECONDS } from './constants'
 
@@ -44,7 +43,7 @@ export async function waitTillWorkflowExecuted({
         }
 
         if (response.status === WorkflowStatuses.IN_PROGRESS) {
-          core.info(`Workflow still in progress, please wait`)
+          console.log(`Workflow still in progress, please wait`)
         }
       } catch (e) {
         console.debug(
