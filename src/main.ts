@@ -13,6 +13,7 @@ export async function run(): Promise<void> {
       throw new Error('CHASSY_TOKEN not provided in environment')
     }
     // the refresh token is to be encoded via Base64 before being sent to the API
+    // TODO: Update this to test for provided format and convert into base64 if not already
     const chassyRefreshTokenEncoded = Buffer.from(
       chassyRefreshTokenDecoded,
       'binary'

@@ -29247,15 +29247,18 @@ async function run() {
     try {
         const workflowId = core.getInput('workflowId');
         // Q: Should the environment variable name be changed?
-        const chassyRefreshToken = process.env.CHASSY_TOKEN;
+        const chassyRefreshTokenDecoded = process.env.CHASSY_TOKEN;
+        if (!chassyRefreshTokenDecoded) {
+            throw new Error('CHASSY_TOKEN not provided in environment');
+        }
+        // the refresh token is to be encoded via Base64 before being sent to the API
+        // TODO: Update this to test for provided format and convert into base64 if not already
+        const chassyRefreshTokenEncoded = Buffer.from(chassyRefreshTokenDecoded, 'binary').toString('base64');
         const userDefinedParameters = JSON.parse(core.getInput('parameters') || '{}');
         const apiBaseUrl = constants_1.BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
             constants_1.BACKEND_BASE_URLS_BY_ENV['PROD'];
-        if (!chassyRefreshToken) {
-            throw new Error('Chassy refresh token isn`t present in env variables');
-        }
         // use refresh token to get valid access token
-        const refreshTokenURL = `${apiBaseUrl}/token/refresh`;
+        const refreshTokenURL = `${apiBaseUrl}/token/user`;
         let refreshTokenResponse;
         try {
             const rawResponse = await fetch(refreshTokenURL, {
@@ -29264,7 +29267,7 @@ async function run() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    token: chassyRefreshToken
+                    token: chassyRefreshTokenEncoded
                 })
             });
             if (!rawResponse.ok) {
@@ -29279,7 +29282,7 @@ async function run() {
             else
                 return; // should never run, just used to tell type-checker to chill
         }
-        const chassyAuthToken = Buffer.from(refreshTokenResponse.token, 'base64').toString();
+        const chassyAuthToken = Buffer.from(refreshTokenResponse.token, 'base64').toString('ascii'); // look into this
         // run workflow
         const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`;
         let response;
