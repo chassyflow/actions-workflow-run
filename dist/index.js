@@ -29260,6 +29260,8 @@ async function run() {
         core.info('making request to refresh token');
         // use refresh token to get valid access token
         const refreshTokenURL = `${apiBaseUrl}/token/user`;
+        core.debug(chassyRefreshTokenDecoded);
+        core.debug(chassyRefreshTokenEncoded);
         let refreshTokenResponse;
         try {
             const rawResponse = await fetch(refreshTokenURL, {
@@ -29278,10 +29280,8 @@ async function run() {
         }
         catch (e) {
             console.debug('Failed to get refresh token');
-            if (e instanceof Error) {
-                core.error(e);
+            if (e instanceof Error)
                 throw new Error(e.message);
-            }
             else
                 return; // should never run, just used to tell type-checker to chill
         }
