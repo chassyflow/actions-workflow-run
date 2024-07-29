@@ -29,6 +29,7 @@ export async function run(): Promise<void> {
 
     // use refresh token to get valid access token
     const refreshTokenURL = `${apiBaseUrl}/token/user`
+    console.debug(refreshTokenURL)
     console.debug(chassyRefreshTokenDecoded)
     console.debug(chassyRefreshTokenEncoded)
     let refreshTokenResponse: TokenData
