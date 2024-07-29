@@ -46,8 +46,10 @@ export async function run(): Promise<void> {
       refreshTokenResponse = await rawResponse.json()
     } catch (e) {
       console.debug('Failed to get refresh token')
-      if (e instanceof Error) throw new Error(e.message)
-      else return // should never run, just used to tell type-checker to chill
+      if (e instanceof Error) {
+        core.error(e)
+        throw new Error(e.message)
+      } else return // should never run, just used to tell type-checker to chill
     }
 
     const chassyAuthToken = Buffer.from(

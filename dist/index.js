@@ -29278,8 +29278,10 @@ async function run() {
         }
         catch (e) {
             console.debug('Failed to get refresh token');
-            if (e instanceof Error)
+            if (e instanceof Error) {
+                core.error(e);
                 throw new Error(e.message);
+            }
             else
                 return; // should never run, just used to tell type-checker to chill
         }
