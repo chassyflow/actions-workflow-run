@@ -29257,6 +29257,7 @@ async function run() {
         const userDefinedParameters = JSON.parse(core.getInput('parameters') || '{}');
         const apiBaseUrl = constants_1.BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
             constants_1.BACKEND_BASE_URLS_BY_ENV['PROD'];
+        core.info('making request to refresh token');
         // use refresh token to get valid access token
         const refreshTokenURL = `${apiBaseUrl}/token/user`;
         let refreshTokenResponse;
@@ -29283,6 +29284,7 @@ async function run() {
                 return; // should never run, just used to tell type-checker to chill
         }
         const chassyAuthToken = Buffer.from(refreshTokenResponse.token, 'base64').toString('ascii'); // look into this
+        core.info('making request to run workflow');
         // run workflow
         const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`;
         let response;

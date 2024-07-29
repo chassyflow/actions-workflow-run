@@ -25,6 +25,8 @@ export async function run(): Promise<void> {
       BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
       BACKEND_BASE_URLS_BY_ENV['PROD']
 
+    core.info('making request to refresh token')
+
     // use refresh token to get valid access token
     const refreshTokenURL = `${apiBaseUrl}/token/user`
     let refreshTokenResponse: TokenData
@@ -52,6 +54,8 @@ export async function run(): Promise<void> {
       refreshTokenResponse.token,
       'base64'
     ).toString('ascii') // look into this
+
+    core.info('making request to run workflow')
 
     // run workflow
     const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`
