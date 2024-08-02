@@ -39,8 +39,7 @@ export async function run(): Promise<void> {
         })
       })
       if (!rawResponse.ok) {
-        console.error(rawResponse.body)
-        throw new Error(`Network response was not ok ${rawResponse.statusText}`)
+        throw new Error(`Network response was not ok ${rawResponse.statusText} ${rawResponse.body}`)
       }
       refreshTokenResponse = await rawResponse.json()
     } catch (e) {
