@@ -57,6 +57,7 @@ export async function run(): Promise<void> {
       'base64'
     ).toString('utf8') // look into this
 
+    console.log(chassyAuthToken)
     core.info('making request to run workflow')
 
     // run workflow
