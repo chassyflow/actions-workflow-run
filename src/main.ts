@@ -52,6 +52,7 @@ export async function run(): Promise<void> {
       else return // should never run, just used to tell type-checker to chill
     }
 
+    console.debug(refreshTokenResponse.idToken)
     const chassyAuthToken = Buffer.from(
       refreshTokenResponse.idToken,
       'base64'
