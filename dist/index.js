@@ -29261,6 +29261,10 @@ async function run() {
         const refreshTokenURL = `${apiBaseUrl}/token/user`;
         console.debug(refreshTokenURL);
         console.debug(chassyRefreshTokenEncoded);
+        const tokenRequestBody = {
+            token: chassyRefreshTokenEncoded
+        };
+        console.debug(tokenRequestBody);
         let refreshTokenResponse;
         try {
             const rawResponse = await fetch(refreshTokenURL, {
@@ -29268,12 +29272,11 @@ async function run() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    token: chassyRefreshTokenEncoded
-                })
+                body: JSON.stringify(tokenRequestBody)
             });
             if (!rawResponse.ok) {
-                throw new Error(`Network response was not ok ${rawResponse.statusText} ${rawResponse.body}`);
+                console.debug();
+                throw new Error(`Network response was not ok ${rawResponse.statusText}`);
             }
             refreshTokenResponse = await rawResponse.json();
         }

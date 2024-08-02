@@ -27,6 +27,10 @@ export async function run(): Promise<void> {
     const refreshTokenURL = `${apiBaseUrl}/token/user`
     console.debug(refreshTokenURL)
     console.debug(chassyRefreshTokenEncoded)
+    const tokenRequestBody = {
+      token: chassyRefreshTokenEncoded
+    }
+    console.debug(tokenRequestBody)
     let refreshTokenResponse: TokenData
     try {
       const rawResponse = await fetch(refreshTokenURL, {
@@ -34,14 +38,11 @@ export async function run(): Promise<void> {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          token: chassyRefreshTokenEncoded
-        })
+        body: JSON.stringify(tokenRequestBody)
       })
       if (!rawResponse.ok) {
-        throw new Error(
-          `Network response was not ok ${rawResponse.statusText} ${rawResponse.body}`
-        )
+        console.debug()
+        throw new Error(`Network response was not ok ${rawResponse.statusText}`)
       }
       refreshTokenResponse = await rawResponse.json()
     } catch (e) {
