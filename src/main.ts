@@ -45,6 +45,7 @@ export async function run(): Promise<void> {
         throw new Error(`Network response was not ok ${rawResponse.statusText}`)
       }
       refreshTokenResponse = await rawResponse.json()
+      console.debug('token response', refreshTokenResponse)
     } catch (e) {
       console.debug('Failed to get refresh token')
       if (e instanceof Error) throw new Error(e.message)
