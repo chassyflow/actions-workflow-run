@@ -8,16 +8,12 @@ export async function run(): Promise<void> {
   try {
     const workflowId: string = core.getInput('workflowId')
     // Q: Should the environment variable name be changed?
-    const chassyRefreshTokenDecoded = process.env.CHASSY_TOKEN
-    if (!chassyRefreshTokenDecoded) {
+    const chassyRefreshTokenEncoded = process.env.CHASSY_TOKEN
+    if (!chassyRefreshTokenEncoded) {
       throw new Error('CHASSY_TOKEN not provided in environment')
     }
     // the refresh token is to be encoded via Base64 before being sent to the API
     // TODO: Update this to test for provided format and convert into base64 if not already
-    const chassyRefreshTokenEncoded = Buffer.from(
-      chassyRefreshTokenDecoded,
-      'binary'
-    ).toString('base64')
     const userDefinedParameters: Record<string, unknown> = JSON.parse(
       core.getInput('parameters') || '{}'
     )
@@ -30,7 +26,6 @@ export async function run(): Promise<void> {
     // use refresh token to get valid access token
     const refreshTokenURL = `${apiBaseUrl}/token/user`
     console.debug(refreshTokenURL)
-    console.debug(chassyRefreshTokenDecoded)
     console.debug(chassyRefreshTokenEncoded)
     let refreshTokenResponse: TokenData
     try {
