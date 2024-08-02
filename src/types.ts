@@ -57,5 +57,6 @@ export type WorkflowExecution = {
 }
 
 export type TokenData = {
-  token: string
+  accessToken: string
+  idToken: string
 }

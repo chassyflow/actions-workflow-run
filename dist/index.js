@@ -29288,7 +29288,7 @@ async function run() {
             else
                 return; // should never run, just used to tell type-checker to chill
         }
-        const chassyAuthToken = Buffer.from(refreshTokenResponse.token, 'base64').toString('ascii'); // look into this
+        const chassyAuthToken = Buffer.from(refreshTokenResponse.idToken, 'base64').toString('utf8'); // look into this
         core.info('making request to run workflow');
         // run workflow
         const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`;

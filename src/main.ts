@@ -53,9 +53,9 @@ export async function run(): Promise<void> {
     }
 
     const chassyAuthToken = Buffer.from(
-      refreshTokenResponse.token,
+      refreshTokenResponse.idToken,
       'base64'
-    ).toString('ascii') // look into this
+    ).toString('utf8') // look into this
 
     core.info('making request to run workflow')
 
