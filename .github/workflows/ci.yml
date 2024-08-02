@@ -61,7 +61,7 @@ jobs:
         id: test-action
         uses: ./
         with:
-          workflowId: 'workflow-37d6e78e922f47e7a27ad0988ae768ee'
+          workflowId: 'workflow-233b25f088ba49ceabb5d44a3d06e75f'
           backendEnvironment: 'DEV'
       - name: Print Output
         id: output
