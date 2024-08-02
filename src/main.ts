@@ -53,7 +53,7 @@ export async function run(): Promise<void> {
     }
 
     console.debug(refreshTokenResponse.idToken)
-    const chassyAuthToken = refreshTokenResponse.accessToken
+    const chassyAuthToken = refreshTokenResponse.idToken
     //const chassyAuthToken = Buffer.from(
     //  refreshTokenResponse.idToken,
     //  'base64'
@@ -64,6 +64,7 @@ export async function run(): Promise<void> {
 
     // run workflow
     const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`
+    console.debug(workflowRunURL)
     let response
     try {
       const rawResponse = await fetch(workflowRunURL, {

@@ -29289,7 +29289,7 @@ async function run() {
                 return; // should never run, just used to tell type-checker to chill
         }
         console.debug(refreshTokenResponse.idToken);
-        const chassyAuthToken = refreshTokenResponse.accessToken;
+        const chassyAuthToken = refreshTokenResponse.idToken;
         //const chassyAuthToken = Buffer.from(
         //  refreshTokenResponse.idToken,
         //  'base64'
@@ -29298,6 +29298,7 @@ async function run() {
         core.info('making request to run workflow');
         // run workflow
         const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`;
+        console.debug(workflowRunURL);
         let response;
         try {
             const rawResponse = await fetch(workflowRunURL, {
