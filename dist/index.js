@@ -29247,13 +29247,12 @@ async function run() {
     try {
         const workflowId = core.getInput('workflowId');
         // Q: Should the environment variable name be changed?
-        const chassyRefreshTokenDecoded = process.env.CHASSY_TOKEN;
-        if (!chassyRefreshTokenDecoded) {
+        const chassyRefreshTokenEncoded = process.env.CHASSY_TOKEN;
+        if (!chassyRefreshTokenEncoded) {
             throw new Error('CHASSY_TOKEN not provided in environment');
         }
         // the refresh token is to be encoded via Base64 before being sent to the API
         // TODO: Update this to test for provided format and convert into base64 if not already
-        const chassyRefreshTokenEncoded = Buffer.from(chassyRefreshTokenDecoded, 'binary').toString('base64');
         const userDefinedParameters = JSON.parse(core.getInput('parameters') || '{}');
         const apiBaseUrl = constants_1.BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
             constants_1.BACKEND_BASE_URLS_BY_ENV['PROD'];
@@ -29261,7 +29260,6 @@ async function run() {
         // use refresh token to get valid access token
         const refreshTokenURL = `${apiBaseUrl}/token/user`;
         console.debug(refreshTokenURL);
-        console.debug(chassyRefreshTokenDecoded);
         console.debug(chassyRefreshTokenEncoded);
         let refreshTokenResponse;
         try {
@@ -29275,7 +29273,7 @@ async function run() {
                 })
             });
             if (!rawResponse.ok) {
-                throw new Error(`Network response was not ok ${rawResponse.statusText}`);
+                throw new Error(`Network response was not ok ${rawResponse.statusText} ${rawResponse.body}`);
             }
             refreshTokenResponse = await rawResponse.json();
         }
