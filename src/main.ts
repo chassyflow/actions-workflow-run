@@ -53,10 +53,11 @@ export async function run(): Promise<void> {
     }
 
     console.debug(refreshTokenResponse.idToken)
-    const chassyAuthToken = Buffer.from(
-      refreshTokenResponse.idToken,
-      'base64'
-    ).toString('utf8') // look into this
+    const chassyAuthToken = refreshTokenResponse.idToken
+    //const chassyAuthToken = Buffer.from(
+    //  refreshTokenResponse.idToken,
+    //  'base64'
+    //).toString('utf8') // look into this
 
     console.log(chassyAuthToken)
     core.info('making request to run workflow')
