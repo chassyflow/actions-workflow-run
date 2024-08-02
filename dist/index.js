@@ -29289,7 +29289,7 @@ async function run() {
                 return; // should never run, just used to tell type-checker to chill
         }
         console.debug(refreshTokenResponse.idToken);
-        const chassyAuthToken = refreshTokenResponse.idToken;
+        const chassyAuthToken = refreshTokenResponse.accessToken;
         //const chassyAuthToken = Buffer.from(
         //  refreshTokenResponse.idToken,
         //  'base64'

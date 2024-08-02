@@ -53,7 +53,7 @@ export async function run(): Promise<void> {
     }
 
     console.debug(refreshTokenResponse.idToken)
-    const chassyAuthToken = refreshTokenResponse.idToken
+    const chassyAuthToken = refreshTokenResponse.accessToken
     //const chassyAuthToken = Buffer.from(
     //  refreshTokenResponse.idToken,
     //  'base64'
