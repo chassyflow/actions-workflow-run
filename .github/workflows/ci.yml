@@ -46,23 +46,23 @@ jobs:
         run: npm run ci-test
 
   # uncomment for manual testing
-  test-action:
-    name: GitHub Actions Test
-    runs-on: ubuntu-latest
-    env:
-      CHASSY_TOKEN: ZXlKamRIa2lPaUpLVjFRaUxDSmxibU1pT2lKQk1qVTJSME5OSWl3aVlXeG5Jam9pVWxOQkxVOUJSVkFpZlEucnpCcnFVZEFwU213a0ViZmlEZ0NBX2tMeV9tOEwzVWJBU3RETzd6Y3YtaWY2WHY3RlRDUUtnMjdNc3BZSFB2bm1ELTI1b2JCSkMzYjA4a2VJaldPTWpBekJPUzhBVnI2NDlLekxGNC1hemQ3RjhSb0dfWElkTnJHVlB1bFM1WGwxTk5Cc2NaTWVBdFpMNUtvNU5oWk9hRnhJaEJnMzM1U190U2t2Zk9aczZ2alktbnZVc0ItUDlLMlFzTkhZWGctVFFOaEdrbmtKX2dxU1VMS19Yb2U1X0NOWWNkMkp3NGZFT3dFaUtiN3QtUUtOUEoxVXVHYjM0TFg5NU9tR2FxWEVkbnl0dTVXTjg4azNaWU1pOTYwalRGRUlzT0VKVDd6ZVdSVnBhUVFmd2lWem4wRkJVZXBCNE9JQmt5RXRNRUdwNko4bjMyQ1NhZXpIdXViUHpRVGx3LlNiOW9DOGdCRjZVVzAxZmcuSVFvMkNFWHNIUlduWXU0M3hjekdZT2VNcFlsWGZKbF9rbVROQ3RoeFpvRGtFTDlqSEtGamhUTFdMcU5ZNGNva0V2c1lpVVBSdkJnckx1M1pNMGNBR1B0WWduX1pVajhsVkJCc2FNQnNEVlNlNzQtbzduemN1NnRadWVscUpsWFRLMG0zdXl0MllJMzljTTkwd1RUMVBTRU5oLXRpb3pHUm9xT0NfWnBKSzBiVUdZcEZ1TnlDMl9HTFVEX012T1JxbnJlVUlzdXpud094Sy1EbHRUT2h6RFhLQjhuQ0M2elhkOF8ya2JmZjA1akFhc3RxbHJfSVZaUTUtNnhLbHlCM1lpdWo4U3dYYmxXMjBFa1JkOHFEZ0tqTmJxaTJlN05pR08wMlZXUUVYMFJhbk5ONEpEcGdQcVRZLVpnMmt1SGhCeVBWUGxLTU55eFdaOTNkV044X2EydlpaazF5UFkxUjJqQzdjdVlNbVdWLVRNeFY3LVNsUzRMR3c4bkxyM2hOU1VJcG9iS29odG04NTF0ZUprVHFDTFNzQmdrV1ZkdHlhNURQQWhmQ204c3pSSnBxUUlxRVVTRG9XTHZJblNYWVpoX2FyZnVxQnhDOWtncGpLSllvcHlvSGYwMUZSYWVvajhwUk9nMnV6NEhDRVFEX0NOV25SXzJKMzdDOFNqc1FHVEJERDExX05kM2JCZnlqWWFTcVFUUjdqNTJYeDdHNUtMcGZvdDNpRE1Vb2s4d0FhYVVnbDVibW84RTJyMHc5NFE3UVlOdjBFUjFhUU85LTFTRkxyNVNabWxrd19kSWpQUUE4VGtWZFBLeF83NVBaQnZxdTROdF9MX3hpZU41TWhkQXM4MkZjV09OMUxncjNUMnpzZ0Q0eWd0MHRXLXl2cFJTZThRMEMzX1JOYkFVSU5kc2o5UGtuNjFYTVdUXzdlNUEwcmVTXzFMSGNYclhWblAzdVpMXzZqMkcxY21OSmlYbUpNQnExaGJVWWFrbHJ5NFhaNmltQXIzUWZDZkEwTVdzWXRNTUZ2dExfdnlWOTFSdkk0T2tFN3dKa1NrVDZnV3JaY1BVTmZhMVphVG5HZm1kd29vZVNxc25jenpuZ3RkTFc5d19vVTYySlNwTEpwTHVXNmplUVNCUlM3X1R2N2g4V25halBLaTV5TXUwa3BOOUItYkxpeW5IUWozcGh3TGtiMk4tM09lMU1ndVZYWks4eVJVT2h4SDJqQTRwVkt3VDUzR2VCV2hCMkVUY05jQnZNN1dVX3A4NGNGWC14UVB5US1XQTVtdFBpSjlHZ1FkellBcGx2NmhTNXd5dGliVnVKZ3RkSEJCRXdubFhhdFQzVFFfYmlCSDZncHN2R05ncWdILW5nWnJqMWVtNGdVLVQ2cldzWk9RRUVKVGYxZGxxMXZIOE9RSUZLNkUwUkFYVGpBV1M4Qlc5Z3lSLW1ZLWlLLU9adUl2cUJhblgwczhyR0RGU19DWHVDLW5BakE1NkRnS3ZYd1ZYNlR0dXY0YmpjOWZXMDBOMUljUmYyRUU5TGxlMWFLMElEWXFZOEZkWWxrem5EZnpsTVE4MEc5TWpiM3B1aUg0Y1UxWjBtWnpSc3hMeS11MFM2OEdvZW95SUpmSXBHY0lBMWtIM0RRRndlU3VXbmpCUzdOMW1zTkhKenJUWFA0bVNxN1ZRX2tpaFNkSEVGeHdZWThPb1JOaUxnZ214NDdYMy1Gdy5mcEtFNXF5MkluS2ZMeHNlamNjem9n
+  # test-action:
+  #   name: GitHub Actions Test
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     CHASSY_TOKEN: <base64 encoded token>
 
-    steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout
+  #       id: checkout
+  #       uses: actions/checkout@v4
 
-      - name: Test Local Action
-        id: test-action
-        uses: ./
-        with:
-          workflowId: 'workflow-bcb23d30df3444b4b02deb973e82b571'
-          backendEnvironment: 'DEV'
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.workflowexecution }}"
+  #     - name: Test Local Action
+  #       id: test-action
+  #       uses: ./
+  #       with:
+  #         workflowId: 'workflow-bcb23d30df3444b4b02deb973e82b571'
+  #         backendEnvironment: 'DEV'
+  #     - name: Print Output
+  #       id: output
+  #       run: echo "${{ steps.test-action.outputs.workflowexecution }}"
