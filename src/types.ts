@@ -55,3 +55,8 @@ export type WorkflowExecution = {
     | 'CHASSY_ERROR'
     | 'EXECUTION_ERROR'
 }
+
+export type TokenData = {
+  accessToken: string
+  idToken: string
+}
