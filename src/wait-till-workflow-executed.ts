@@ -51,7 +51,9 @@ export async function waitTillWorkflowExecuted({
                 }
                 case 'FAILED': {
                   rej(
-                    `Failed to publish ${pkg.access ? `${pkg.access} ` : ''}${pkg.packageClass} package ${pkg.name} of type ${pkg.type}`
+                    new Error(
+                      `Failed to publish ${pkg.access ? `${pkg.access} ` : ''}${pkg.packageClass} package ${pkg.name} of type ${pkg.type}`
+                    )
                   )
                 }
               }
@@ -70,7 +72,9 @@ export async function waitTillWorkflowExecuted({
                 }
                 case 'CANCELED' || 'FAILED': {
                   rej(
-                    `Deployment of ${deployment.release.name} version ${deployment.release.versionInfo} to ${deployment.machines ? deployment.machines.length : 0} machines in fleet with ID ${deployment.fleetId} ${deployment.status}`
+                    new Error(
+                      `Deployment of ${deployment.release.name} version ${deployment.release.versionInfo} to ${deployment.machines ? deployment.machines.length : 0} machines in fleet with ID ${deployment.fleetId} ${deployment.status}`
+                    )
                   )
                   break
                 }

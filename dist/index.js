@@ -29416,7 +29416,7 @@ async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, work
                                     break;
                                 }
                                 case 'FAILED': {
-                                    rej(`Failed to publish ${pkg.access ? `${pkg.access} ` : ''}${pkg.packageClass} package ${pkg.name} of type ${pkg.type}`);
+                                    rej(new Error(`Failed to publish ${pkg.access ? `${pkg.access} ` : ''}${pkg.packageClass} package ${pkg.name} of type ${pkg.type}`));
                                 }
                             }
                         }
@@ -29433,7 +29433,7 @@ async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, work
                                     break;
                                 }
                                 case 'CANCELED' || 0: {
-                                    rej(`Deployment of ${deployment.release.name} version ${deployment.release.versionInfo} to ${deployment.machines ? deployment.machines.length : 0} machines in fleet with ID ${deployment.fleetId} ${deployment.status}`);
+                                    rej(new Error(`Deployment of ${deployment.release.name} version ${deployment.release.versionInfo} to ${deployment.machines ? deployment.machines.length : 0} machines in fleet with ID ${deployment.fleetId} ${deployment.status}`));
                                     break;
                                 }
                             }
