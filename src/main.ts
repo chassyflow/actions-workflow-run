@@ -7,6 +7,7 @@ import { TokenData } from './types'
 export async function run(): Promise<void> {
   try {
     const workflowId: string = core.getInput('workflowId')
+    const sync: boolean = core.getBooleanInput('sync') ?? true
     const chassyRefreshTokenB64 = process.env.CHASSY_TOKEN
     if (!chassyRefreshTokenB64) {
       throw new Error('CHASSY_TOKEN not provided in environment')
@@ -89,7 +90,8 @@ export async function run(): Promise<void> {
     const workflowExecution = await waitTillWorkflowExecuted({
       accessToken: chassyAuthToken,
       workflowExecutionId,
-      workflowRunURL
+      workflowRunURL,
+      sync
     })
 
     core.info('\u001b[32mWorkflow is executed successfully!')

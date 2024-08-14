@@ -29246,6 +29246,7 @@ const wait_till_workflow_executed_1 = __nccwpck_require__(9453);
 async function run() {
     try {
         const workflowId = core.getInput('workflowId');
+        const sync = core.getBooleanInput('sync') ?? true;
         const chassyRefreshTokenB64 = process.env.CHASSY_TOKEN;
         if (!chassyRefreshTokenB64) {
             throw new Error('CHASSY_TOKEN not provided in environment');
@@ -29318,7 +29319,8 @@ async function run() {
         const workflowExecution = await (0, wait_till_workflow_executed_1.waitTillWorkflowExecuted)({
             accessToken: chassyAuthToken,
             workflowExecutionId,
-            workflowRunURL
+            workflowRunURL,
+            sync
         });
         core.info('\u001b[32mWorkflow is executed successfully!');
         core.startGroup('Full workflow run info');
@@ -29379,7 +29381,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.waitTillWorkflowExecuted = void 0;
 const types_1 = __nccwpck_require__(5077);
 const constants_1 = __nccwpck_require__(9042);
-async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, workflowRunURL }) {
+async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, workflowRunURL, sync }) {
     return new Promise((res, rej) => {
         const fetchWorkflowExecution = async () => fetch(`${workflowRunURL}/${workflowExecutionId}`, {
             method: 'GET',
@@ -29396,6 +29398,47 @@ async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, work
                 }
                 const response = await rawResponse.json();
                 if (response.status === types_1.WorkflowStatuses.SUCCESS) {
+                    if (!sync) {
+                        res(response);
+                        return;
+                    }
+                    // check that packages are all completed
+                    let complete = true;
+                    if (response.packages) {
+                        for (let pkg of response.packages) {
+                            switch (pkg.status) {
+                                case 'AVAILABLE': {
+                                    complete &&= true;
+                                    break;
+                                }
+                                case 'PENDING': {
+                                    complete = false;
+                                    break;
+                                }
+                                case 'FAILED': {
+                                    rej(`Failed to publish ${pkg.access ? pkg.access + ' ' : ''}${pkg.packageClass} package ${pkg.name} of type ${pkg.type}`);
+                                }
+                            }
+                        }
+                    }
+                    if (response.deployments) {
+                        for (let deployment of response.deployments) {
+                            switch (deployment.status) {
+                                case 'COMPLETE': {
+                                    complete &&= true;
+                                    break;
+                                }
+                                case 'INPROGRESS' || 0: {
+                                    complete = false;
+                                    break;
+                                }
+                                case 'CANCELED' || 0: {
+                                    rej(`Deployment of ${deployment.release.name} version ${deployment.release.versionInfo} to ${deployment.machines ? deployment.machines.length : 0} machines in fleet with ID ${deployment.fleetId} ${deployment.status}`);
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     res(response);
                     return;
                 }
