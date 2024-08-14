@@ -29405,7 +29405,7 @@ async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, work
                     // check that packages are all completed
                     let complete = true;
                     if (response.packages) {
-                        for (let pkg of response.packages) {
+                        for (const pkg of response.packages) {
                             switch (pkg.status) {
                                 case 'AVAILABLE': {
                                     complete &&= true;
@@ -29416,13 +29416,13 @@ async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, work
                                     break;
                                 }
                                 case 'FAILED': {
-                                    rej(`Failed to publish ${pkg.access ? pkg.access + ' ' : ''}${pkg.packageClass} package ${pkg.name} of type ${pkg.type}`);
+                                    rej(`Failed to publish ${pkg.access ? `${pkg.access} ` : ''}${pkg.packageClass} package ${pkg.name} of type ${pkg.type}`);
                                 }
                             }
                         }
                     }
                     if (response.deployments) {
-                        for (let deployment of response.deployments) {
+                        for (const deployment of response.deployments) {
                             switch (deployment.status) {
                                 case 'COMPLETE': {
                                     complete &&= true;
