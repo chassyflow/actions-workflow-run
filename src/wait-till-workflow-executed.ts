@@ -77,8 +77,10 @@ export async function waitTillWorkflowExecuted({
               }
             }
           }
-          res(response)
-          return
+          if (complete) {
+            res(response)
+            return
+          }
         }
 
         if (

@@ -29439,8 +29439,10 @@ async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, work
                             }
                         }
                     }
-                    res(response);
-                    return;
+                    if (complete) {
+                        res(response);
+                        return;
+                    }
                 }
                 if (response.status === types_1.WorkflowStatuses.CHASSY_ERROR ||
                     response.status === types_1.WorkflowStatuses.CONFIG_ERROR ||
