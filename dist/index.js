@@ -29198,11 +29198,20 @@ function wrappy (fn, cb) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.RETRY_IN_SECONDS = exports.BACKEND_BASE_URLS_BY_ENV = void 0;
-exports.BACKEND_BASE_URLS_BY_ENV = {
-    PROD: 'https://api.chassy.io/v1',
-    STAGE: 'https://api.stage.chassy.dev/v1',
-    DEV: 'https://api.test.chassy.dev/v1'
+exports.RETRY_IN_SECONDS = exports.BASE_URLS_BY_ENV = void 0;
+exports.BASE_URLS_BY_ENV = {
+    PROD: {
+        apiBaseUrl: 'https://api.chassy.io/v1',
+        frontendBaseUrl: 'https://console.chassy.io'
+    },
+    STAGE: {
+        apiBaseUrl: 'https://api.stage.chassy.dev/v1',
+        frontendBaseUrl: 'https://console.stage.chassy.dev'
+    },
+    DEV: {
+        apiBaseUrl: 'https://api.test.chassy.dev/v1',
+        frontendBaseUrl: 'https://console.test.chassy.dev'
+    }
 };
 exports.RETRY_IN_SECONDS = 30;
 
@@ -29251,8 +29260,8 @@ async function run() {
             throw new Error('CHASSY_TOKEN not provided in environment');
         }
         const userDefinedParameters = JSON.parse(core.getInput('parameters') || '{}');
-        const apiBaseUrl = constants_1.BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
-            constants_1.BACKEND_BASE_URLS_BY_ENV['PROD'];
+        const { apiBaseUrl, frontendBaseUrl } = constants_1.BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
+            constants_1.BASE_URLS_BY_ENV['PROD'];
         core.info('making request to refresh token');
         // use refresh token to get valid access token
         const refreshTokenURL = `${apiBaseUrl}/token/user`;
@@ -29336,7 +29345,7 @@ async function run() {
             core.notice(`Created deployments`);
             console.log(JSON.stringify(workflowExecution.deployments, null, 2));
         }
-        core.notice(`For more information, visit [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`);
+        core.notice(`For more information, visit [Chassy Web Platform](${frontendBaseUrl}/workflows/${response.workflowId}/${workflowExecutionId})`);
         core.setOutput('workflowExecution', JSON.stringify(workflowExecution, null, 2));
     }
     catch (error) {

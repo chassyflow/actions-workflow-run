@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import { BACKEND_BASE_URLS_BY_ENV } from './constants'
+import { BASE_URLS_BY_ENV } from './constants'
 import { waitTillWorkflowExecuted } from './wait-till-workflow-executed'
 import { TokenData } from './types'
 
@@ -14,9 +14,9 @@ export async function run(): Promise<void> {
     const userDefinedParameters: Record<string, unknown> = JSON.parse(
       core.getInput('parameters') || '{}'
     )
-    const apiBaseUrl =
-      BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
-      BACKEND_BASE_URLS_BY_ENV['PROD']
+    const { apiBaseUrl, frontendBaseUrl } =
+      BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
+      BASE_URLS_BY_ENV['PROD']
 
     core.info('making request to refresh token')
 
@@ -114,7 +114,7 @@ export async function run(): Promise<void> {
     }
 
     core.notice(
-      `For more information, visit [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`
+      `For more information, visit [Chassy Web Platform](${frontendBaseUrl}/workflows/${response.workflowId}/${workflowExecutionId})`
     )
 
     core.setOutput(
