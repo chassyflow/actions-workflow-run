@@ -29323,7 +29323,7 @@ async function run() {
         }
         const workflowExecutionId = response.id;
         core.info(`Workflow steps \n ${JSON.stringify(response.graph.steps, null, 2)}`);
-        core.notice(`You can find the visual representation of the steps graph on [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`);
+        core.notice(`You can find the visual representation of the steps graph on [Chassy Web Platform](${frontendBaseUrl}/workflows/${response.workflowId}/${workflowExecutionId})`);
         const workflowExecution = await (0, wait_till_workflow_executed_1.waitTillWorkflowExecuted)({
             accessToken: chassyAuthToken,
             workflowExecutionId,
