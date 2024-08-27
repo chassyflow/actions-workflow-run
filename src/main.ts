@@ -8,8 +8,8 @@ export async function run(): Promise<void> {
   try {
     const workflowId: string = core.getInput('workflowId')
     const chassyRefreshTokenB64 = process.env.CHASSY_TOKEN
-    if (!chassyRefreshTokenB64) {
-      throw new Error('CHASSY_TOKEN not provided in environment')
+    if (!chassyRefreshTokenB64 || chassyRefreshTokenB64 === '') {
+      throw new Error('CHASSY_TOKEN not provided in environment or is empty')
     }
     const userDefinedParameters: Record<string, unknown> = JSON.parse(
       core.getInput('parameters') || '{}'
