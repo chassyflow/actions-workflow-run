@@ -50,7 +50,7 @@ jobs:
     name: GitHub Actions Test
     runs-on: ubuntu-latest
     env:
-      CHASSY_TOKEN: ${ secrets.CHASSY_TOKEN }
+      CHASSY_TOKEN: ${{ secrets.CHASSY_TOKEN }}
     steps:
       - name: Checkout
         id: checkout
