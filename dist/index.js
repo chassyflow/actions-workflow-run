@@ -29256,7 +29256,7 @@ async function run() {
     try {
         const workflowId = core.getInput('workflowId');
         const chassyRefreshTokenB64 = process.env.CHASSY_TOKEN;
-        if (!chassyRefreshTokenB64) {
+        if (chassyRefreshTokenB64 === undefined) {
             throw new Error('CHASSY_TOKEN not provided in environment');
         }
         else if (chassyRefreshTokenB64 === '') {
