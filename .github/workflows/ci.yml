@@ -57,7 +57,7 @@ jobs:
         id: test-action
         uses: ./
         env:
-          CHASSY_TOKEN: temp-dummy
+          CHASSY_TOKEN: ${{ secrets.CHASSY_TOKEN }}
         with:
           workflowId: 'workflow-bcb23d30df3444b4b02deb973e82b571'
           backendEnvironment: 'DEV'
