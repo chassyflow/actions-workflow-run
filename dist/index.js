@@ -29316,11 +29316,14 @@ async function run() {
         const workflowExecutionId = response.id;
         core.info(`Workflow steps \n ${JSON.stringify(response.graph.steps, null, 2)}`);
         core.notice(`You can find the visual representation of the steps graph on [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`);
+        if (!sync) {
+            core.notice('`sync` disabled. Exiting.');
+            return;
+        }
         const workflowExecution = await (0, wait_till_workflow_executed_1.waitTillWorkflowExecuted)({
             accessToken: chassyAuthToken,
             workflowExecutionId,
-            workflowRunURL,
-            sync
+            workflowRunURL
         });
         core.info('\u001b[32mWorkflow is executed successfully!');
         core.startGroup('Full workflow run info');
@@ -29381,7 +29384,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.waitTillWorkflowExecuted = void 0;
 const types_1 = __nccwpck_require__(5077);
 const constants_1 = __nccwpck_require__(9042);
-async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, workflowRunURL, sync }) {
+async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, workflowRunURL }) {
     return new Promise((res, rej) => {
         const fetchWorkflowExecution = async () => fetch(`${workflowRunURL}/${workflowExecutionId}`, {
             method: 'GET',
@@ -29398,51 +29401,8 @@ async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, work
                 }
                 const response = await rawResponse.json();
                 if (response.status === types_1.WorkflowStatuses.SUCCESS) {
-                    if (!sync) {
-                        res(response);
-                        return;
-                    }
-                    // check that packages are all completed
-                    let complete = true;
-                    if (response.packages) {
-                        for (const pkg of response.packages) {
-                            switch (pkg.status) {
-                                case 'AVAILABLE': {
-                                    complete &&= true;
-                                    break;
-                                }
-                                case 'PENDING': {
-                                    complete = false;
-                                    break;
-                                }
-                                case 'FAILED': {
-                                    rej(new Error(`Failed to publish ${pkg.access ? `${pkg.access} ` : ''}${pkg.packageClass} package ${pkg.name} of type ${pkg.type}`));
-                                }
-                            }
-                        }
-                    }
-                    if (response.deployments) {
-                        for (const deployment of response.deployments) {
-                            switch (deployment.status) {
-                                case 'COMPLETE': {
-                                    complete &&= true;
-                                    break;
-                                }
-                                case 'INPROGRESS' || 0: {
-                                    complete = false;
-                                    break;
-                                }
-                                case 'CANCELED' || 0: {
-                                    rej(new Error(`Deployment of ${deployment.release.name} version ${deployment.release.versionInfo} to ${deployment.machines ? deployment.machines.length : 0} machines in fleet with ID ${deployment.fleetId} ${deployment.status}`));
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (complete) {
-                        res(response);
-                        return;
-                    }
+                    res(response);
+                    return;
                 }
                 if (response.status === types_1.WorkflowStatuses.CHASSY_ERROR ||
                     response.status === types_1.WorkflowStatuses.CONFIG_ERROR ||

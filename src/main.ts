@@ -87,11 +87,15 @@ export async function run(): Promise<void> {
       `You can find the visual representation of the steps graph on [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`
     )
 
+    if (!sync) {
+      core.notice('`sync` disabled. Exiting.')
+      return
+    }
+
     const workflowExecution = await waitTillWorkflowExecuted({
       accessToken: chassyAuthToken,
       workflowExecutionId,
-      workflowRunURL,
-      sync
+      workflowRunURL
     })
 
     core.info('\u001b[32mWorkflow is executed successfully!')
