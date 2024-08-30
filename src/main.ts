@@ -85,7 +85,7 @@ export async function run(): Promise<void> {
       `Workflow steps \n ${JSON.stringify(response.graph.steps, null, 2)}`
     )
     core.notice(
-      `You can find the visual representation of the steps graph on [Chassy Web Platform](${frontendBaseUrl}/workflows/${response.workflowId}/${workflowExecutionId})`
+      `You can find the visual representation of the steps graph on [Chassy Web Platform](${frontendBaseUrl}/workflows/${response.workflowId}?runId=${workflowExecutionId})`
     )
 
     const workflowExecution = await waitTillWorkflowExecuted({
@@ -116,7 +116,7 @@ export async function run(): Promise<void> {
     }
 
     core.notice(
-      `For more information, visit [Chassy Web Platform](${frontendBaseUrl}/workflows/${response.workflowId}/${workflowExecutionId})`
+      `For more information, visit [Chassy Web Platform](${frontendBaseUrl}/workflows/${response.workflowId}?runId=${workflowExecutionId})`
     )
 
     core.setOutput(
