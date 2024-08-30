@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import { BACKEND_BASE_URLS_BY_ENV } from './constants'
+import { BASE_URLS_BY_ENV } from './constants'
 import { waitTillWorkflowExecuted } from './wait-till-workflow-executed'
 import { TokenData } from './types'
 
@@ -9,15 +9,17 @@ export async function run(): Promise<void> {
     const workflowId: string = core.getInput('workflowId')
     const sync: boolean = core.getBooleanInput('sync') ?? true
     const chassyRefreshTokenB64 = process.env.CHASSY_TOKEN
-    if (!chassyRefreshTokenB64) {
+    if (chassyRefreshTokenB64 === undefined) {
       throw new Error('CHASSY_TOKEN not provided in environment')
+    } else if (chassyRefreshTokenB64 === '') {
+      throw new Error('CHASSY_TOKEN value is empty string')
     }
     const userDefinedParameters: Record<string, unknown> = JSON.parse(
       core.getInput('parameters') || '{}'
     )
-    const apiBaseUrl =
-      BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
-      BACKEND_BASE_URLS_BY_ENV['PROD']
+    const { apiBaseUrl, frontendBaseUrl } =
+      BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
+      BASE_URLS_BY_ENV['PROD']
 
     core.info('making request to refresh token')
 
@@ -84,7 +86,7 @@ export async function run(): Promise<void> {
       `Workflow steps \n ${JSON.stringify(response.graph.steps, null, 2)}`
     )
     core.notice(
-      `You can find the visual representation of the steps graph on [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`
+      `You can find the visual representation of the steps graph on [Chassy Web Platform](${frontendBaseUrl}/workflows/${response.workflowId}?runId=${workflowExecutionId})`
     )
 
     if (!sync) {
@@ -120,7 +122,7 @@ export async function run(): Promise<void> {
     }
 
     core.notice(
-      `For more information, visit [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`
+      `For more information, visit [Chassy Web Platform](${frontendBaseUrl}/workflows/${response.workflowId}?runId=${workflowExecutionId})`
     )
 
     core.setOutput(

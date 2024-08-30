@@ -29198,11 +29198,20 @@ function wrappy (fn, cb) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.RETRY_IN_SECONDS = exports.BACKEND_BASE_URLS_BY_ENV = void 0;
-exports.BACKEND_BASE_URLS_BY_ENV = {
-    PROD: 'https://api.chassy.io/v1',
-    STAGE: 'https://api.stage.chassy.dev/v1',
-    DEV: 'https://api.test.chassy.dev/v1'
+exports.RETRY_IN_SECONDS = exports.BASE_URLS_BY_ENV = void 0;
+exports.BASE_URLS_BY_ENV = {
+    PROD: {
+        apiBaseUrl: 'https://api.chassy.io/v1',
+        frontendBaseUrl: 'https://console.chassy.io'
+    },
+    STAGE: {
+        apiBaseUrl: 'https://api.stage.chassy.dev/v1',
+        frontendBaseUrl: 'https://console.stage.chassy.dev'
+    },
+    DEV: {
+        apiBaseUrl: 'https://api.test.chassy.dev/v1',
+        frontendBaseUrl: 'https://console.test.chassy.dev'
+    }
 };
 exports.RETRY_IN_SECONDS = 30;
 
@@ -29248,12 +29257,15 @@ async function run() {
         const workflowId = core.getInput('workflowId');
         const sync = core.getBooleanInput('sync') ?? true;
         const chassyRefreshTokenB64 = process.env.CHASSY_TOKEN;
-        if (!chassyRefreshTokenB64) {
+        if (chassyRefreshTokenB64 === undefined) {
             throw new Error('CHASSY_TOKEN not provided in environment');
         }
+        else if (chassyRefreshTokenB64 === '') {
+            throw new Error('CHASSY_TOKEN value is empty string');
+        }
         const userDefinedParameters = JSON.parse(core.getInput('parameters') || '{}');
-        const apiBaseUrl = constants_1.BACKEND_BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
-            constants_1.BACKEND_BASE_URLS_BY_ENV['PROD'];
+        const { apiBaseUrl, frontendBaseUrl } = constants_1.BASE_URLS_BY_ENV[core.getInput('backendEnvironment')] ||
+            constants_1.BASE_URLS_BY_ENV['PROD'];
         core.info('making request to refresh token');
         // use refresh token to get valid access token
         const refreshTokenURL = `${apiBaseUrl}/token/user`;
@@ -29315,7 +29327,7 @@ async function run() {
         }
         const workflowExecutionId = response.id;
         core.info(`Workflow steps \n ${JSON.stringify(response.graph.steps, null, 2)}`);
-        core.notice(`You can find the visual representation of the steps graph on [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`);
+        core.notice(`You can find the visual representation of the steps graph on [Chassy Web Platform](${frontendBaseUrl}/workflows/${response.workflowId}?runId=${workflowExecutionId})`);
         if (!sync) {
             core.notice('`sync` disabled. Exiting.');
             return;
@@ -29341,7 +29353,7 @@ async function run() {
             core.notice(`Created deployments`);
             console.log(JSON.stringify(workflowExecution.deployments, null, 2));
         }
-        core.notice(`For more information, visit [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`);
+        core.notice(`For more information, visit [Chassy Web Platform](${frontendBaseUrl}/workflows/${response.workflowId}?runId=${workflowExecutionId})`);
         core.setOutput('workflowExecution', JSON.stringify(workflowExecution, null, 2));
     }
     catch (error) {

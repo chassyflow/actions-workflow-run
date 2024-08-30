@@ -7,6 +7,11 @@ export enum WorkflowStatuses {
   EXECUTION_ERROR = 'EXECUTION_ERROR'
 }
 
+export type BaseUrl = {
+  apiBaseUrl: string
+  frontendBaseUrl: string
+}
+
 export type Package = {
   id: string
   sha256: string
