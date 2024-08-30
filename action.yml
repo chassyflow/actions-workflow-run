@@ -6,6 +6,11 @@ inputs:
   workflowId:
     description: 'The id of the specified workflow'
     required: true
+  sync:
+    description:
+      'States that the action should synchronously poll for workflow completion'
+    required: false
+    default: 'true'
   parameters:
     description: 'Parameters with any fields in JSON format'
     required: false

@@ -7,6 +7,7 @@ import { TokenData } from './types'
 export async function run(): Promise<void> {
   try {
     const workflowId: string = core.getInput('workflowId')
+    const sync: boolean = core.getBooleanInput('sync') ?? true
     const chassyRefreshTokenB64 = process.env.CHASSY_TOKEN
     if (!chassyRefreshTokenB64) {
       throw new Error('CHASSY_TOKEN not provided in environment')
@@ -85,6 +86,11 @@ export async function run(): Promise<void> {
     core.notice(
       `You can find the visual representation of the steps graph on [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`
     )
+
+    if (!sync) {
+      core.notice('`sync` disabled. Exiting.')
+      return
+    }
 
     const workflowExecution = await waitTillWorkflowExecuted({
       accessToken: chassyAuthToken,

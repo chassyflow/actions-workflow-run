@@ -29246,6 +29246,7 @@ const wait_till_workflow_executed_1 = __nccwpck_require__(9453);
 async function run() {
     try {
         const workflowId = core.getInput('workflowId');
+        const sync = core.getBooleanInput('sync') ?? true;
         const chassyRefreshTokenB64 = process.env.CHASSY_TOKEN;
         if (!chassyRefreshTokenB64) {
             throw new Error('CHASSY_TOKEN not provided in environment');
@@ -29315,6 +29316,10 @@ async function run() {
         const workflowExecutionId = response.id;
         core.info(`Workflow steps \n ${JSON.stringify(response.graph.steps, null, 2)}`);
         core.notice(`You can find the visual representation of the steps graph on [Chassy Web Platform](https://console.test.chassy.dev/workflows/${response.workflowId}/${workflowExecutionId})`);
+        if (!sync) {
+            core.notice('`sync` disabled. Exiting.');
+            return;
+        }
         const workflowExecution = await (0, wait_till_workflow_executed_1.waitTillWorkflowExecuted)({
             accessToken: chassyAuthToken,
             workflowExecutionId,

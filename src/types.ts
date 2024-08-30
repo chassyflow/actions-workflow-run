@@ -54,6 +54,7 @@ export type WorkflowExecution = {
     | 'CONFIG_ERROR'
     | 'CHASSY_ERROR'
     | 'EXECUTION_ERROR'
+  errorMessage?: string
 }
 
 export type TokenData = {
