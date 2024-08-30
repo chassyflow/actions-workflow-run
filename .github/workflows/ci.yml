@@ -46,21 +46,23 @@ jobs:
         run: npm run ci-test
 
   # uncomment for manual testing
-  test-action:
-    name: GitHub Actions Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
-      - name: Test Local Action
-        id: test-action
-        uses: ./
-        env:
-          CHASSY_TOKEN: ${{ secrets.CHASSY_TOKEN }}
-        with:
-          workflowId: 'workflow-bcb23d30df3444b4b02deb973e82b571'
-          backendEnvironment: 'DEV'
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.workflowexecution }}"
+  # test-action:
+  #   name: GitHub Actions Test
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     CHASSY_TOKEN: <base64 encoded token>
+
+  #   steps:
+  #     - name: Checkout
+  #       id: checkout
+  #       uses: actions/checkout@v4
+
+  #     - name: Test Local Action
+  #       id: test-action
+  #       uses: ./
+  #       with:
+  #         workflowId: 'workflow-bcb23d30df3444b4b02deb973e82b571'
+  #         backendEnvironment: 'DEV'
+  #     - name: Print Output
+  #       id: output
+  #       run: echo "${{ steps.test-action.outputs.workflowexecution }}"
