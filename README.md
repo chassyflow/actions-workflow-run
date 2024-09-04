@@ -1,5 +1,55 @@
 # Actions workflow run
 
+This GitHub action will allow you to easily execute Chassy workflows within
+your automation pipelines.
+
+# Environment
+
+In addition to any configuration options, you also must have `CHASSY_TOKEN` defined within the environment.
+This is a secret value and as such should be stored within your repository's or organization's GitHub secrets.
+This value is what allows Chassy to authorize your workflow execution and prevents strangers from executing
+workflows that aren't theirs. It is quite a long string encoded in Base64.
+
+| Variable       | Description                                           |
+| -------------- | ----------------------------------------------------- |
+| `CHASSY_TOKEN` | Authentication token for automated workflow execution |
+
+If `CHASSY_TOKEN` isn't defined, the action will fail to execute the workflow.
+
+# Configuration
+
+Each of these options can be used in the `with` section when you call this action.
+
+| Configuration        | Description                                                      | Type           | Default            |
+| -------------------- | ---------------------------------------------------------------- | -------------- | ------------------ |
+| `workflowId`         | Id of workflow you wish to execute                               | `string`       | **NONE. Required** |
+| `sync`               | Await completion of workflow execution                           | `boolean`      | `true`             |
+| `parameters`         | User-defined parameters for workflow (JSON format)               | `string`       | `'{}'`             |
+| `backendEnvironment` | Selects which chassy backend to use (`'PROD' | 'STAGE' | 'DEV'`) | `string union` | `'PROD'`           |
+
+
+For example, inspect the following basic configuration:
+
+```yml
+example-action:
+  name: Example Action
+  runs-on: ubuntu-latest
+  env:
+    CHASSY_TOKEN: <base64 encoded token>
+  steps:
+    - name: Checkout
+      id: checkout
+      uses: actions/checkout@v4
+    - name: Run a workflow
+      id: workflow-run
+      uses: chassyflow/actions-workflow-run@v1.2.0
+      with:
+        workflowId: '<some workflow id>'
+    - name: Print Workflow Output
+      id: output
+      run: echo "${{ steps.workflow-run.outputs.workflowexecution }}"
+```
+
 ## How to use Create GitHub Action for Workflow Run
 
 The action has next inputs
@@ -8,6 +58,10 @@ The action has next inputs
 workflowId:
   description: 'The id of the specified workflow'
   required: true
+sync:
+  description: 'Waits for workflow execution to complete'
+  required: false
+  default: 'true'
 parameters:
   description: 'Parameters with any fields in JSON format'
   required: false
