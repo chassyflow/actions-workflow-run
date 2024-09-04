@@ -1,6 +1,6 @@
 # Actions workflow run
 
-This GitHub action will allow you to easily execute Chassy workflows within
+This GitHub Action will allow you to easily execute Chassy workflows within
 your automation pipelines.
 
 # Environment
@@ -8,7 +8,7 @@ your automation pipelines.
 In addition to any configuration options, you also must have `CHASSY_TOKEN` defined within the environment.
 This is a secret value and as such should be stored within your repository's or organization's GitHub secrets.
 This value is what allows Chassy to authorize your workflow execution and prevents strangers from executing
-workflows that aren't theirs. It is quite a long string encoded in Base64.
+workflows that aren't theirs. It is quite a long string encoded in base64.
 
 | Variable       | Description                                           |
 | -------------- | ----------------------------------------------------- |
@@ -22,7 +22,7 @@ Each of these options can be used in the `with` section when you call this actio
 
 | Configuration        | Description                                                      | Type           | Default            |
 | -------------------- | ---------------------------------------------------------------- | -------------- | ------------------ |
-| `workflowId`         | Id of workflow you wish to execute                               | `string`       | **NONE. Required** |
+| `workflowId`         | ID of workflow you wish to execute                               | `string`       | **NONE. Required** |
 | `sync`               | Await completion of workflow execution                           | `boolean`      | `true`             |
 | `parameters`         | User-defined parameters for workflow (JSON format)               | `string`       | `'{}'`             |
 | `backendEnvironment` | Selects which chassy backend to use (`'PROD' | 'STAGE' | 'DEV'`) | `string union` | `'PROD'`           |
