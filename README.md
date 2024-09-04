@@ -3,12 +3,14 @@
 This GitHub Action will allow you to easily execute Chassy workflows within
 your automation pipelines.
 
-# Environment
+## Environment
 
-In addition to any configuration options, you also must have `CHASSY_TOKEN` defined within the environment.
-This is a secret value and as such should be stored within your repository's or organization's GitHub secrets.
-This value is what allows Chassy to authorize your workflow execution and prevents strangers from executing
-workflows that aren't theirs. It is quite a long string encoded in base64.
+In addition to any configuration options, you also must have `CHASSY_TOKEN`
+defined within the environment. This is a secret value and as such should be
+stored within your repository's or organization's GitHub secrets. This value
+is what allows Chassy to authorize your workflow execution and prevents
+strangers from executing workflows that aren't theirs. It is quite a long
+string encoded in base64.
 
 | Variable       | Description                                           |
 | -------------- | ----------------------------------------------------- |
@@ -16,17 +18,20 @@ workflows that aren't theirs. It is quite a long string encoded in base64.
 
 If `CHASSY_TOKEN` isn't defined, the action will fail to execute the workflow.
 
-# Configuration
+## Configuration
 
-Each of these options can be used in the `with` section when you call this action.
+Each of these options can be used in the `with` section when you call this
+action.
 
-| Configuration        | Description                                                      | Type           | Default            |
-| -------------------- | ---------------------------------------------------------------- | -------------- | ------------------ |
-| `workflowId`         | ID of workflow you wish to execute                               | `string`       | **NONE. Required** |
-| `sync`               | Await completion of workflow execution                           | `boolean`      | `true`             |
-| `parameters`         | User-defined parameters for workflow (JSON format)               | `string`       | `'{}'`             |
-| `backendEnvironment` | Selects which chassy backend to use (`'PROD' | 'STAGE' | 'DEV'`) | `string union` | `'PROD'`           |
-
+| Configuration | Description | Type | Default |
+| --- | --- | --- | --- |
+| `workflowId` | ID of workflow you wish to execute | `string` |
+**NONE. Required** |
+| `sync` | Await completion of workflow execution | `boolean` | `true` |
+| `parameters` | User-defined parameters for workflow (JSON format) | `string`
+| `'{}'` |
+| `backendEnvironment` | Selects which chassy backend to use (`'PROD' |
+'STAGE' | 'DEV'`) | `string union` | `'PROD'` |
 
 For example, inspect the following basic configuration:
 
