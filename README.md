@@ -3,7 +3,7 @@
 This GitHub Action will allow you to easily execute Chassy workflows within
 your automation pipelines.
 
-## Environment
+## Authentication with Chassy
 
 In addition to any configuration options, you also must have `CHASSY_TOKEN`
 defined within the environment. This is a secret value and as such should be
@@ -18,7 +18,7 @@ string encoded in base64.
 
 If `CHASSY_TOKEN` isn't defined, the action will fail to execute the workflow.
 
-## Configuration
+## Usage
 
 Each of these options can be used in the `with` section when you call this
 action.
@@ -30,8 +30,6 @@ action.
 | `sync` | Await completion of workflow execution | `boolean` | `true` |
 | `parameters` | User-defined parameters for workflow (JSON format) | `string`
 | `'{}'` |
-| `backendEnvironment` | Selects which chassy backend to use (`'PROD' |
-'STAGE' | 'DEV'`) | `string union` | `'PROD'` |
 
 For example, inspect the following basic configuration:
 
@@ -42,9 +40,6 @@ example-action:
   env:
     CHASSY_TOKEN: <base64 encoded token>
   steps:
-    - name: Checkout
-      id: checkout
-      uses: actions/checkout@v4
     - name: Run a workflow
       id: workflow-run
       uses: chassyflow/actions-workflow-run@v1.2.0
