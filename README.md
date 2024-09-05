@@ -25,10 +25,10 @@ action.
 
 | Configuration | Description | Type | Default |
 | --- | --- | --- | --- |
-| `workflowId` | ID of workflow you wish to execute | `string` |
+| `workflowId` | ID of workflow you wish to execute | `string` | \
 **NONE. Required** |
 | `sync` | Await completion of workflow execution | `boolean` | `true` |
-| `parameters` | User-defined parameters for workflow (JSON format) | `string`
+| `parameters` | User-defined parameters for workflow (JSON format) | `string`\
 | `'{}'` |
 
 For example, inspect the following basic configuration:
