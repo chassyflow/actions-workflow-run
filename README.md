@@ -56,7 +56,9 @@ example-action:
       run: echo "${{ steps.workflow-run.outputs.workflowexecution }}"
 ```
 
-## How to use Create GitHub Action for Workflow Run
+## Development
+
+### How to use Create GitHub Action for Workflow Run
 
 The action has next inputs
 
@@ -81,7 +83,7 @@ backendEnvironment:
 Get the action name and version from the tags of this repository and reference
 it in your workflow
 
-## Development Setup
+### Setup
 
 After you've cloned the repository to your local machine or codespace, you'll
 need to perform some initial setup steps before you can develop your action.
@@ -120,7 +122,7 @@ need to perform some initial setup steps before you can develop your action.
    ...
    ```
 
-## How to validate the Action
+### How to validate the Action
 
 You can validate the action by referencing it in a workflow file. For example,
 [`ci.yml`](./.github/workflows/ci.yml) demonstrates how to reference an action
@@ -128,7 +130,7 @@ in the same repository. To test the action push code to a branch, it will
 trigger the ci.yml workflow, where you can see execution status and where you
 can see any logs you've specified in the main.ts file
 
-## Usage
+### Usage
 
 After testing, you can create version tag(s) that developers can use to
 reference different stable versions of your action. For more information, see
@@ -156,7 +158,7 @@ steps:
     run: echo "${{ steps.test-action.outputs.time }}"
 ```
 
-## Publishing a New Release
+### Publishing a New Release
 
 This project includes a helper script, [`script/release`](./script/release)
 designed to streamline the process of tagging and pushing new releases for
