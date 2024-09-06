@@ -18,7 +18,7 @@ in base64.
 
 If `CHASSY_TOKEN` isn't defined, the action will fail to execute the workflow.
 
-## Usage
+## Usage in Development
 
 Each of these options can be used in the `with` section when you call this
 action.
