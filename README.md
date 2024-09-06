@@ -23,11 +23,19 @@ If `CHASSY_TOKEN` isn't defined, the action will fail to execute the workflow.
 Each of these options can be used in the `with` section when you call this
 action.
 
-| Configuration | Description                                        | Type      | Default            |
-| ------------- | -------------------------------------------------- | --------- | ------------------ |
-| `workflowId`  | ID of workflow you wish to execute                 | `string`  | **NONE. Required** |
-| `sync`        | Await completion of workflow execution             | `boolean` | `true`             |
-| `parameters`  | User-defined parameters for workflow (JSON format) | `string`  | `'{}'`             |
+| Configuration | Description                                 | Type      |
+| ------------- | ------------------------------------------- | --------- |
+| `workflowId`  | ID of workflow you wish to execute          | `string`  |
+| `sync`        | Await completion of workflow execution      | `boolean` |
+| `parameters`  | User-defined parameters for workflow (JSON) | `string`  |
+
+### Default Values
+
+| Configuration | Default Value |
+| ------------- | ------------- |
+| `workflowId`  | **NONE**      |
+| `sync`        | `true`        |
+| `parameters`  | `'{}'`        |
 
 For example, inspect the following basic configuration:
 
