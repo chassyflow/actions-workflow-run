@@ -1,6 +1,64 @@
 # Actions workflow run
 
-## How to use Create GitHub Action for Workflow Run
+This GitHub Action will allow you to easily execute Chassy workflows within your
+automation pipelines.
+
+## Authentication with Chassy
+
+In addition to any configuration options, you also must have `CHASSY_TOKEN`
+defined within the environment. This is a secret value and as such should be
+stored within your repository's or organization's GitHub secrets. This value is
+what allows Chassy to authorize your workflow execution and prevents strangers
+from executing workflows that aren't theirs. It is quite a long string encoded
+in base64.
+
+| Variable       | Description                                           |
+| -------------- | ----------------------------------------------------- |
+| `CHASSY_TOKEN` | Authentication token for automated workflow execution |
+
+If `CHASSY_TOKEN` isn't defined, the action will fail to execute the workflow.
+
+## Usage in Development
+
+Each of these options can be used in the `with` section when you call this
+action.
+
+| Configuration | Description                                 | Type      |
+| ------------- | ------------------------------------------- | --------- |
+| `workflowId`  | ID of workflow you wish to execute          | `string`  |
+| `sync`        | Await completion of workflow execution      | `boolean` |
+| `parameters`  | User-defined parameters for workflow (JSON) | `string`  |
+
+### Default Values
+
+| Configuration | Default Value |
+| ------------- | ------------- |
+| `workflowId`  | **NONE**      |
+| `sync`        | `true`        |
+| `parameters`  | `'{}'`        |
+
+For example, inspect the following basic configuration:
+
+```yml
+example-action:
+  name: Example Action
+  runs-on: ubuntu-latest
+  env:
+    CHASSY_TOKEN: <base64 encoded token>
+  steps:
+    - name: Run a workflow
+      id: workflow-run
+      uses: chassyflow/actions-workflow-run@v1.2.0
+      with:
+        workflowId: '<some workflow id>'
+    - name: Print Workflow Output
+      id: output
+      run: echo "${{ steps.workflow-run.outputs.workflowexecution }}"
+```
+
+## Development
+
+### How to use Create GitHub Action for Workflow Run
 
 The action has next inputs
 
@@ -8,6 +66,10 @@ The action has next inputs
 workflowId:
   description: 'The id of the specified workflow'
   required: true
+sync:
+  description: 'Waits for workflow execution to complete'
+  required: false
+  default: 'true'
 parameters:
   description: 'Parameters with any fields in JSON format'
   required: false
@@ -21,7 +83,7 @@ backendEnvironment:
 Get the action name and version from the tags of this repository and reference
 it in your workflow
 
-## Development Setup
+### Setup
 
 After you've cloned the repository to your local machine or codespace, you'll
 need to perform some initial setup steps before you can develop your action.
@@ -60,7 +122,7 @@ need to perform some initial setup steps before you can develop your action.
    ...
    ```
 
-## How to validate the Action
+### How to validate the Action
 
 You can validate the action by referencing it in a workflow file. For example,
 [`ci.yml`](./.github/workflows/ci.yml) demonstrates how to reference an action
@@ -68,7 +130,7 @@ in the same repository. To test the action push code to a branch, it will
 trigger the ci.yml workflow, where you can see execution status and where you
 can see any logs you've specified in the main.ts file
 
-## Usage
+### Usage
 
 After testing, you can create version tag(s) that developers can use to
 reference different stable versions of your action. For more information, see
@@ -96,7 +158,7 @@ steps:
     run: echo "${{ steps.test-action.outputs.time }}"
 ```
 
-## Publishing a New Release
+### Publishing a New Release
 
 This project includes a helper script, [`script/release`](./script/release)
 designed to streamline the process of tagging and pushing new releases for
