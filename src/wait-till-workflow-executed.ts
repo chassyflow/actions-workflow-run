@@ -46,9 +46,6 @@ export async function waitTillWorkflowExecuted({
           console.log(`Workflow still in progress, please wait`)
         }
       } catch (e) {
-        console.debug(
-          `Error during making GET request to get workflow run info ${workflowRunURL}/${workflowExecutionId}`
-        )
         if (e instanceof Error) rej(e.message)
       } finally {
         clearInterval(waitInterval)

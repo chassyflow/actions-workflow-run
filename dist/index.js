@@ -29321,7 +29321,7 @@ async function run() {
             response = await rawResponse.json();
         }
         catch (e) {
-            console.debug(`Error during making POST request to ${workflowRunURL}`);
+            console.debug(`Failed to start workflow run`);
             if (e instanceof Error)
                 throw new Error(e.message);
         }
@@ -29426,7 +29426,6 @@ async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, work
                 }
             }
             catch (e) {
-                console.debug(`Error during making GET request to get workflow run info ${workflowRunURL}/${workflowExecutionId}`);
                 if (e instanceof Error)
                     rej(e.message);
             }
