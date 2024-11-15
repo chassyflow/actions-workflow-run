@@ -1,6 +1,6 @@
 import { WorkflowExecution, WorkflowStatuses } from './types'
 import { backOff } from 'exponential-backoff'
-import { RETRY_IN_SECONDS } from './constants'
+import { BACKOFF_CONFIG, RETRY_IN_SECONDS } from './constants'
 
 export async function waitTillWorkflowExecuted({
   accessToken,
@@ -14,7 +14,7 @@ export async function waitTillWorkflowExecuted({
   return new Promise((res, rej) => {
     const fetchWorkflowExecution = async (): Promise<Response> =>
       backOff(
-        () =>
+        async () =>
           fetch(`${workflowRunURL}/${workflowExecutionId}`, {
             method: 'GET',
             headers: {
@@ -22,11 +22,7 @@ export async function waitTillWorkflowExecuted({
               Authorization: accessToken
             }
           }),
-        {
-          numOfAttempts: 6,
-          timeMultiple: 2,
-          startingDelay: 2
-        }
+        BACKOFF_CONFIG
       )
 
     const checkWorkflowExecution = async (): Promise<void> => {

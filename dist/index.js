@@ -29609,7 +29609,7 @@ function wrappy (fn, cb) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.RETRY_IN_SECONDS = exports.BASE_URLS_BY_ENV = void 0;
+exports.BACKOFF_CONFIG = exports.RETRY_IN_SECONDS = exports.BASE_URLS_BY_ENV = void 0;
 exports.BASE_URLS_BY_ENV = {
     PROD: {
         apiBaseUrl: 'https://api.chassy.io/v1',
@@ -29625,6 +29625,11 @@ exports.BASE_URLS_BY_ENV = {
     }
 };
 exports.RETRY_IN_SECONDS = 30;
+exports.BACKOFF_CONFIG = {
+    numOfAttempts: 6,
+    timeMultiple: 2,
+    startingDelay: 2
+};
 
 
 /***/ }),
@@ -29810,17 +29815,13 @@ const exponential_backoff_1 = __nccwpck_require__(3183);
 const constants_1 = __nccwpck_require__(9042);
 async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, workflowRunURL }) {
     return new Promise((res, rej) => {
-        const fetchWorkflowExecution = async () => (0, exponential_backoff_1.backOff)(() => fetch(`${workflowRunURL}/${workflowExecutionId}`, {
+        const fetchWorkflowExecution = async () => (0, exponential_backoff_1.backOff)(async () => fetch(`${workflowRunURL}/${workflowExecutionId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: accessToken
             }
-        }), {
-            numOfAttempts: 6,
-            timeMultiple: 2,
-            startingDelay: 2
-        });
+        }), constants_1.BACKOFF_CONFIG);
         const checkWorkflowExecution = async () => {
             try {
                 const rawResponse = await fetchWorkflowExecution();
