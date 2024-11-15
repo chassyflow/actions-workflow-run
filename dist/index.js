@@ -29827,6 +29827,7 @@ async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, work
             }
         }), constants_1.BACKOFF_CONFIG);
         const checkWorkflowExecution = async () => {
+            console.log('checking workflow execution');
             try {
                 const rawResponse = await fetchWorkflowExecution();
                 if (!rawResponse.ok) {

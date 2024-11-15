@@ -26,6 +26,7 @@ export async function waitTillWorkflowExecuted({
       )
 
     const checkWorkflowExecution = async (): Promise<void> => {
+      console.log('checking workflow execution')
       try {
         const rawResponse = await fetchWorkflowExecution()
         if (!rawResponse.ok) {
