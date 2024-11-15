@@ -1,4 +1,4 @@
-import { IBackOffOptions } from 'exponential-backoff'
+import { BackoffOptions } from 'exponential-backoff'
 import { BaseUrl } from './types'
 
 export const BASE_URLS_BY_ENV: Record<string, BaseUrl> = {
@@ -18,8 +18,12 @@ export const BASE_URLS_BY_ENV: Record<string, BaseUrl> = {
 
 export const RETRY_IN_SECONDS = 30
 
-export const BACKOFF_CONFIG: Partial<IBackOffOptions> = {
+export const BACKOFF_CONFIG: BackoffOptions = {
   numOfAttempts: 6,
   timeMultiple: 2,
-  startingDelay: 2
+  startingDelay: 2,
+  retry: (_, n) => {
+    console.log(`retrying for time (${n})`)
+    return true
+  }
 }
