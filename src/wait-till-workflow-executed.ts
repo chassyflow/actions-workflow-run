@@ -13,28 +13,25 @@ export async function waitTillWorkflowExecuted({
 }): Promise<WorkflowExecution> {
   return new Promise((res, rej) => {
     const fetchWorkflowExecution = async (): Promise<Response> =>
-      backOff(
-        async () =>
-          fetch(`${workflowRunURL}/${workflowExecutionId}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: accessToken
-            }
-          }),
-        BACKOFF_CONFIG
-      )
+      fetch(`${workflowRunURL}/${workflowExecutionId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: accessToken
+        }
+      })
 
     const checkWorkflowExecution = async (): Promise<void> => {
-      console.log('checking workflow execution')
       try {
-        const rawResponse = await fetchWorkflowExecution()
-        if (!rawResponse.ok) {
-          throw new Error(
-            `Network response was not ok ${rawResponse.statusText}`
-          )
-        }
-        const response = await rawResponse.json()
+        const response = await backOff(async () => {
+          const rawResponse = await fetchWorkflowExecution()
+          if (!rawResponse.ok) {
+            throw new Error(
+              `Network response was not ok ${rawResponse.statusText}`
+            )
+          }
+          return rawResponse.json()
+        }, BACKOFF_CONFIG)
         if (response.status === WorkflowStatuses.SUCCESS) {
           res(response)
           return

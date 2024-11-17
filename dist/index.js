@@ -29820,21 +29820,22 @@ const exponential_backoff_1 = __nccwpck_require__(3183);
 const constants_1 = __nccwpck_require__(9042);
 async function waitTillWorkflowExecuted({ accessToken, workflowExecutionId, workflowRunURL }) {
     return new Promise((res, rej) => {
-        const fetchWorkflowExecution = async () => (0, exponential_backoff_1.backOff)(async () => fetch(`${workflowRunURL}/${workflowExecutionId}`, {
+        const fetchWorkflowExecution = async () => fetch(`${workflowRunURL}/${workflowExecutionId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: accessToken
             }
-        }), constants_1.BACKOFF_CONFIG);
+        });
         const checkWorkflowExecution = async () => {
-            console.log('checking workflow execution');
             try {
-                const rawResponse = await fetchWorkflowExecution();
-                if (!rawResponse.ok) {
-                    throw new Error(`Network response was not ok ${rawResponse.statusText}`);
-                }
-                const response = await rawResponse.json();
+                const response = await (0, exponential_backoff_1.backOff)(async () => {
+                    const rawResponse = await fetchWorkflowExecution();
+                    if (!rawResponse.ok) {
+                        throw new Error(`Network response was not ok ${rawResponse.statusText}`);
+                    }
+                    return rawResponse.json();
+                }, constants_1.BACKOFF_CONFIG);
                 if (response.status === types_1.WorkflowStatuses.SUCCESS) {
                     res(response);
                     return;
