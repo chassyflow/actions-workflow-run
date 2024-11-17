@@ -76,7 +76,7 @@ export async function run(): Promise<void> {
       }
       response = await rawResponse.json()
     } catch (e) {
-      console.debug(`Error during making POST request to ${workflowRunURL}`)
+      console.debug(`Failed to start workflow run`)
       if (e instanceof Error) throw new Error(e.message)
     }
 
