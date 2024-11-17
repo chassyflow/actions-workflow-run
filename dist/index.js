@@ -29628,11 +29628,7 @@ exports.RETRY_IN_SECONDS = 30;
 exports.BACKOFF_CONFIG = {
     numOfAttempts: 6,
     timeMultiple: 2,
-    startingDelay: 2,
-    retry: (_, n) => {
-        console.log(`retrying for time (${n})`);
-        return true;
-    }
+    startingDelay: 2
 };
 
 
@@ -29695,8 +29691,9 @@ async function run() {
         };
         let refreshTokenResponse;
         try {
+            let numAttempt = 1;
             const rawResponse = await (0, exponential_backoff_1.backOff)(() => {
-                console.log('ATTEMPTING TO get token');
+                console.log(`ATTEMPTING TO get token ${numAttempt++}`);
                 return fetch(refreshTokenURL, {
                     method: 'POST',
                     headers: {

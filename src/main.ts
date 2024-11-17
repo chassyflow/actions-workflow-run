@@ -31,8 +31,9 @@ export async function run(): Promise<void> {
     }
     let refreshTokenResponse: TokenData
     try {
+      let numAttempt = 1
       const rawResponse = await backOff(() => {
-        console.log('ATTEMPTING TO get token')
+        console.log(`ATTEMPTING TO get token ${numAttempt++}`)
         return fetch(refreshTokenURL, {
           method: 'POST',
           headers: {
