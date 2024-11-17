@@ -29,19 +29,20 @@ export async function run(): Promise<void> {
     const tokenRequestBody = {
       token: chassyRefreshTokenB64
     }
+    let numAttempt = 1
+    const tempFunc = () => {
+      console.log(`ATTEMPTING TO get token ${numAttempt++}`)
+      return fetch(refreshTokenURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token: 'Bad token' })
+      })
+    }
     let refreshTokenResponse: TokenData
     try {
-      let numAttempt = 1
-      const rawResponse = await backOff(() => {
-        console.log(`ATTEMPTING TO get token ${numAttempt++}`)
-        return fetch(refreshTokenURL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ token: 'Bad token' })
-        })
-      }, BACKOFF_CONFIG)
+      const rawResponse = await backOff(() => tempFunc(), BACKOFF_CONFIG)
       if (!rawResponse.ok) {
         throw new Error(`Network response was not ok ${rawResponse.statusText}`)
       }

@@ -29689,19 +29689,20 @@ async function run() {
         const tokenRequestBody = {
             token: chassyRefreshTokenB64
         };
+        let numAttempt = 1;
+        const tempFunc = () => {
+            console.log(`ATTEMPTING TO get token ${numAttempt++}`);
+            return fetch(refreshTokenURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token: 'Bad token' })
+            });
+        };
         let refreshTokenResponse;
         try {
-            let numAttempt = 1;
-            const rawResponse = await (0, exponential_backoff_1.backOff)(() => {
-                console.log(`ATTEMPTING TO get token ${numAttempt++}`);
-                return fetch(refreshTokenURL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ token: 'Bad token' })
-                });
-            }, constants_1.BACKOFF_CONFIG);
+            const rawResponse = await (0, exponential_backoff_1.backOff)(() => tempFunc(), constants_1.BACKOFF_CONFIG);
             if (!rawResponse.ok) {
                 throw new Error(`Network response was not ok ${rawResponse.statusText}`);
             }
