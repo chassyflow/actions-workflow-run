@@ -42,7 +42,9 @@ export async function run(): Promise<void> {
     }
     let refreshTokenResponse: TokenData
     try {
-      const rawResponse = await backOff(() => tempFunc(), BACKOFF_CONFIG)
+      const rawResponse = await backOff(() => tempFunc(), {
+        numOfAttempts: 6
+      })
       if (!rawResponse.ok) {
         throw new Error(`Network response was not ok ${rawResponse.statusText}`)
       }

@@ -29702,7 +29702,9 @@ async function run() {
         };
         let refreshTokenResponse;
         try {
-            const rawResponse = await (0, exponential_backoff_1.backOff)(() => tempFunc(), constants_1.BACKOFF_CONFIG);
+            const rawResponse = await (0, exponential_backoff_1.backOff)(() => tempFunc(), {
+                numOfAttempts: 6
+            });
             if (!rawResponse.ok) {
                 throw new Error(`Network response was not ok ${rawResponse.statusText}`);
             }
