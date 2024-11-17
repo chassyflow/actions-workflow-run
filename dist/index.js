@@ -29628,7 +29628,11 @@ exports.RETRY_IN_SECONDS = 30;
 exports.BACKOFF_CONFIG = {
     numOfAttempts: 6,
     timeMultiple: 2,
-    startingDelay: 2
+    startingDelay: 2,
+    retry: (err, attempt) => {
+        console.error(`fail to run func, retry ${attempt}...`, err);
+        return true;
+    }
 };
 
 
@@ -29692,19 +29696,17 @@ async function run() {
         let numAttempt = 1;
         const tempFunc = () => {
             console.log(`ATTEMPTING TO get token ${numAttempt++}`);
-            return fetch(refreshTokenURL, {
+            return;
+        };
+        let refreshTokenResponse;
+        try {
+            const rawResponse = await (0, exponential_backoff_1.backOff)(() => fetch(refreshTokenURL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ token: 'Bad token' })
-            });
-        };
-        let refreshTokenResponse;
-        try {
-            const rawResponse = await (0, exponential_backoff_1.backOff)(() => tempFunc(), {
-                numOfAttempts: 6
-            });
+            }), constants_1.BACKOFF_CONFIG);
             if (!rawResponse.ok) {
                 throw new Error(`Network response was not ok ${rawResponse.statusText}`);
             }

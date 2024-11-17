@@ -32,19 +32,21 @@ export async function run(): Promise<void> {
     let numAttempt = 1
     const tempFunc = () => {
       console.log(`ATTEMPTING TO get token ${numAttempt++}`)
-      return fetch(refreshTokenURL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ token: 'Bad token' })
-      })
+      return
     }
     let refreshTokenResponse: TokenData
     try {
-      const rawResponse = await backOff(() => tempFunc(), {
-        numOfAttempts: 6
-      })
+      const rawResponse = await backOff(
+        () =>
+          fetch(refreshTokenURL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ token: 'Bad token' })
+          }),
+        BACKOFF_CONFIG
+      )
       if (!rawResponse.ok) {
         throw new Error(`Network response was not ok ${rawResponse.statusText}`)
       }
