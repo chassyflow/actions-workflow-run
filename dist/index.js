@@ -29695,13 +29695,16 @@ async function run() {
         };
         let refreshTokenResponse;
         try {
-            const rawResponse = await (0, exponential_backoff_1.backOff)(() => fetch(refreshTokenURL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ token: 'Bad token' })
-            }), constants_1.BACKOFF_CONFIG);
+            const rawResponse = await (0, exponential_backoff_1.backOff)(() => {
+                console.log('ATTEMPTING TO get token');
+                return fetch(refreshTokenURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token: 'Bad token' })
+                });
+            }, constants_1.BACKOFF_CONFIG);
             if (!rawResponse.ok) {
                 throw new Error(`Network response was not ok ${rawResponse.statusText}`);
             }
