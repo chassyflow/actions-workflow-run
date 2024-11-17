@@ -29672,6 +29672,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const constants_1 = __nccwpck_require__(9042);
 const wait_till_workflow_executed_1 = __nccwpck_require__(9453);
+const exponential_backoff_1 = __nccwpck_require__(3183);
 async function run() {
     try {
         const workflowId = core.getInput('workflowId');
@@ -29694,13 +29695,13 @@ async function run() {
         };
         let refreshTokenResponse;
         try {
-            const rawResponse = await fetch(refreshTokenURL, {
+            const rawResponse = await (0, exponential_backoff_1.backOff)(() => fetch(refreshTokenURL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(tokenRequestBody)
-            });
+            }), constants_1.BACKOFF_CONFIG);
             if (!rawResponse.ok) {
                 throw new Error(`Network response was not ok ${rawResponse.statusText}`);
             }
@@ -29719,7 +29720,7 @@ async function run() {
         const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`;
         let response;
         try {
-            const rawResponse = await fetch(workflowRunURL, {
+            const rawResponse = await (0, exponential_backoff_1.backOff)(() => fetch(workflowRunURL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -29734,7 +29735,7 @@ async function run() {
                         })
                     }
                 })
-            });
+            }), constants_1.BACKOFF_CONFIG);
             if (!rawResponse.ok) {
                 throw new Error(`Network response was not ok ${rawResponse.statusText}`);
             }
