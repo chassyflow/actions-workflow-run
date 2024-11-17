@@ -29,11 +29,6 @@ export async function run(): Promise<void> {
     const tokenRequestBody = {
       token: chassyRefreshTokenB64
     }
-    let numAttempt = 1
-    const tempFunc = () => {
-      console.log(`ATTEMPTING TO get token ${numAttempt++}`)
-      return
-    }
     let refreshTokenResponse: TokenData
     try {
       refreshTokenResponse = await backOff(async () => {
@@ -42,7 +37,7 @@ export async function run(): Promise<void> {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ token: 'Bad token' })
+          body: JSON.stringify(tokenRequestBody)
         })
         if (!rawResponse.ok) {
           throw new Error(

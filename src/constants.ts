@@ -21,9 +21,5 @@ export const RETRY_IN_SECONDS = 30
 export const BACKOFF_CONFIG: BackoffOptions = {
   numOfAttempts: 6,
   timeMultiple: 2,
-  startingDelay: 2,
-  retry: (err, attempt): boolean => {
-    console.debug(`fail to run func, retry ${attempt}...`, err)
-    return true
-  }
+  startingDelay: 2
 }
