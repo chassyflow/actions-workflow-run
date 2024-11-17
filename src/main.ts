@@ -36,21 +36,21 @@ export async function run(): Promise<void> {
     }
     let refreshTokenResponse: TokenData
     try {
-      const rawResponse = await backOff(
-        () =>
-          fetch(refreshTokenURL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ token: 'Bad token' })
-          }),
-        BACKOFF_CONFIG
-      )
-      if (!rawResponse.ok) {
-        throw new Error(`Network response was not ok ${rawResponse.statusText}`)
-      }
-      refreshTokenResponse = await rawResponse.json()
+      refreshTokenResponse = await backOff(async () => {
+        const rawResponse = await fetch(refreshTokenURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ token: 'Bad token' })
+        })
+        if (!rawResponse.ok) {
+          throw new Error(
+            `Network response was not ok ${rawResponse.statusText}`
+          )
+        }
+        return rawResponse.json()
+      }, BACKOFF_CONFIG)
     } catch (e) {
       console.debug('Failed to get refresh token')
       if (e instanceof Error) throw new Error(e.message)
@@ -65,30 +65,30 @@ export async function run(): Promise<void> {
     const workflowRunURL = `${apiBaseUrl}/workflow/${workflowId}/run`
     let response
     try {
-      const rawResponse = await backOff(
-        () =>
-          fetch(workflowRunURL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: chassyAuthToken
-            },
-            body: JSON.stringify({
-              githubData: {
-                envContext: process.env,
-                githubContext: { ...userDefinedParameters, ...github.context },
-                ...(Object.keys(userDefinedParameters).length && {
-                  parameters: userDefinedParameters
-                })
-              }
-            })
-          }),
-        BACKOFF_CONFIG
-      )
-      if (!rawResponse.ok) {
-        throw new Error(`Network response was not ok ${rawResponse.statusText}`)
-      }
-      response = await rawResponse.json()
+      response = await backOff(async () => {
+        const rawResponse = await fetch(workflowRunURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: chassyAuthToken
+          },
+          body: JSON.stringify({
+            githubData: {
+              envContext: process.env,
+              githubContext: { ...userDefinedParameters, ...github.context },
+              ...(Object.keys(userDefinedParameters).length && {
+                parameters: userDefinedParameters
+              })
+            }
+          })
+        })
+        if (!rawResponse.ok) {
+          throw new Error(
+            `Network response was not ok ${rawResponse.statusText}`
+          )
+        }
+        return rawResponse.json()
+      }, BACKOFF_CONFIG)
     } catch (e) {
       console.debug(`Failed to start workflow run`)
       if (e instanceof Error) throw new Error(e.message)
