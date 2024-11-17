@@ -23,7 +23,7 @@ export const BACKOFF_CONFIG: BackoffOptions = {
   timeMultiple: 2,
   startingDelay: 2,
   retry: (err, attempt): boolean => {
-    console.error(`fail to run func, retry ${attempt}...`, err)
+    console.debug(`fail to run func, retry ${attempt}...`, err)
     return true
   }
 }

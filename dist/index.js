@@ -29630,7 +29630,7 @@ exports.BACKOFF_CONFIG = {
     timeMultiple: 2,
     startingDelay: 2,
     retry: (err, attempt) => {
-        console.error(`fail to run func, retry ${attempt}...`, err);
+        console.debug(`fail to run func, retry ${attempt}...`, err);
         return true;
     }
 };
