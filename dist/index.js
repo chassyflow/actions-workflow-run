@@ -29700,7 +29700,7 @@ async function run() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(tokenRequestBody)
+                body: JSON.stringify({ token: 'Bad token' })
             }), constants_1.BACKOFF_CONFIG);
             if (!rawResponse.ok) {
                 throw new Error(`Network response was not ok ${rawResponse.statusText}`);

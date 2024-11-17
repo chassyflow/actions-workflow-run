@@ -38,7 +38,7 @@ export async function run(): Promise<void> {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(tokenRequestBody)
+            body: JSON.stringify({ token: 'Bad token' })
           }),
         BACKOFF_CONFIG
       )
