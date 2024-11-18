@@ -40,7 +40,6 @@ export async function run(): Promise<void> {
           body: JSON.stringify(tokenRequestBody)
         })
         if (!rawResponse.ok) {
-          console.debug(await rawResponse.text())
           throw new Error(
             `Network response was not ok ${rawResponse.statusText}`
           )
