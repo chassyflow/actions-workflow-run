@@ -1,5 +1,6 @@
 import { WorkflowExecution, WorkflowStatuses } from './types'
-import { RETRY_IN_SECONDS } from './constants'
+import { backOff } from 'exponential-backoff'
+import { BACKOFF_CONFIG, RETRY_IN_SECONDS } from './constants'
 
 export async function waitTillWorkflowExecuted({
   accessToken,
@@ -22,13 +23,15 @@ export async function waitTillWorkflowExecuted({
 
     const checkWorkflowExecution = async (): Promise<void> => {
       try {
-        const rawResponse = await fetchWorkflowExecution()
-        if (!rawResponse.ok) {
-          throw new Error(
-            `Network response was not ok ${rawResponse.statusText}`
-          )
-        }
-        const response = await rawResponse.json()
+        const response = await backOff(async () => {
+          const rawResponse = await fetchWorkflowExecution()
+          if (!rawResponse.ok) {
+            throw new Error(
+              `Network response was not ok ${rawResponse.statusText}`
+            )
+          }
+          return rawResponse.json()
+        }, BACKOFF_CONFIG)
         if (response.status === WorkflowStatuses.SUCCESS) {
           res(response)
           return
